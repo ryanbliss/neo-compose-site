@@ -21,6 +21,10 @@ export const metadata: Metadata = {
   title: "Neo Compose — Build worlds, not spreadsheets",
   description:
     "The game content platform for Unity: visual schemas, branching dialogue flows, typed C# codegen, cloud saves with realtime sync, localization, versioned releases, a Figma-style level editor, and an agent-friendly CLI.",
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg", // Optional: for mobile home screens
+  },
 };
 
 export default function RootLayout({
