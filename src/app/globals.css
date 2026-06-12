@@ -1,26 +1,107 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --color-void: #0b0a14;
+  --color-panel: #14121f;
+  --color-panel-2: #1b1830;
+  --color-edge: #2c2747;
+  --color-blurple: #6c5ce7;
+  --color-blurple-bright: #8b7cff;
+  --color-neon-pink: #ff4d9d;
+  --color-neon-green: #3ddc84;
+  --color-neon-yellow: #ffd166;
+  --color-ice: #5ad7ff;
+  --color-ink: #e8e6f5;
+  --color-ink-dim: #9b95b8;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-geist-sans);
+  --font-mono: var(--font-jetbrains-mono);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-dash: dash 1.4s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2.6s ease-in-out infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-void);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-blurple);
+  color: white;
+}
+
+.bg-grid {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgb(139 124 255 / 0.14) 1px,
+    transparent 0
+  );
+  background-size: 28px 28px;
+}
+
+.glass {
+  background: rgb(20 18 31 / 0.72);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--color-edge);
+}
+
+.glow-ring {
+  box-shadow:
+    0 0 0 1px rgb(139 124 255 / 0.25),
+    0 0 40px rgb(108 92 231 / 0.25),
+    inset 0 0 24px rgb(108 92 231 / 0.08);
+}
+
+.text-gradient {
+  background: linear-gradient(
+    100deg,
+    var(--color-blurple-bright),
+    var(--color-ice) 40%,
+    var(--color-neon-pink) 80%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
