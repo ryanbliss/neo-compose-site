@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Layers, Map as MapIcon } from "lucide-react";
+import { Axe, Layers, Map as MapIcon } from "lucide-react";
+import { tileArt, TreeSprite, type Tile } from "./level-editor-art";
 
-type Tile = "grass" | "dirt" | "water";
 type Tool = Tile | "tree" | "axe";
 
 interface Cell {
@@ -15,32 +15,57 @@ interface Cell {
 const GRID_W = 12;
 const GRID_H = 7;
 
-const tileColors: Record<Tile, string> = {
-  grass: "#3a7d44",
-  dirt: "#8a5a33",
-  water: "#2f6f9f",
-};
+const tileTools = Object.keys(tileArt) as Tile[];
 
-const tools: Array<{ id: Tool; label: string; emoji: string }> = [
-  { id: "grass", label: "Grass", emoji: "🌿" },
-  { id: "dirt", label: "Dirt", emoji: "🟫" },
-  { id: "water", label: "Water", emoji: "💧" },
-  { id: "tree", label: "Oak tree", emoji: "🌳" },
-  { id: "axe", label: "Axe", emoji: "🪓" },
-];
+function at(x: number, y: number): number {
+  return y * GRID_W + x;
+}
 
 function initialCells(): Cell[] {
   const cells: Cell[] = Array.from({ length: GRID_W * GRID_H }, () => ({
     tile: "grass" as Tile,
     tree: false,
   }));
-  for (const index of [14, 27, 40]) cells[index] = { tile: "grass", tree: true };
+  // flagstone path winding in from the left
+  for (const [x, y] of [
+    [0, 3],
+    [1, 3],
+    [2, 3],
+    [3, 3],
+    [4, 3],
+    [4, 4],
+    [5, 4],
+    [6, 4],
+  ] as const) {
+    cells[at(x, y)] = { tile: "stone", tree: false };
+  }
+  // tilled soil patch, top-left
+  for (let y = 0; y <= 1; y++) {
+    for (let x = 1; x <= 3; x++) {
+      cells[at(x, y)] = { tile: "soil", tree: false };
+    }
+  }
+  // pond, bottom-right
+  for (let y = 4; y <= 6; y++) {
+    for (let x = 9; x <= 11; x++) {
+      cells[at(x, y)] = { tile: "water", tree: false };
+    }
+  }
+  cells[at(8, 5)] = { tile: "water", tree: false };
+  // oaks
+  for (const [x, y] of [
+    [6, 1],
+    [9, 2],
+    [2, 5],
+  ] as const) {
+    cells[at(x, y)] = { tile: "grass", tree: true };
+  }
   return cells;
 }
 
 export function LevelEditor() {
   const [cells, setCells] = useState<Cell[]>(initialCells);
-  const [tool, setTool] = useState<Tool>("dirt");
+  const [tool, setTool] = useState<Tool>("soil");
   const [wood, setWood] = useState(0);
   const [lastWrite, setLastWrite] = useState<string | null>(null);
   const painting = useRef(false);
@@ -68,7 +93,7 @@ export function LevelEditor() {
   function applyTool(index: number) {
     const cell = cells[index];
     if (tool === "tree") {
-      if (cell.tree) return;
+      if (cell.tree || cell.tile === "water") return;
       setCells((current) =>
         current.map((entry, i) => (i === index ? { ...entry, tree: true } : entry)),
       );
@@ -88,11 +113,15 @@ export function LevelEditor() {
     }
     if (cell.tile === tool) return;
     setCells((current) =>
-      current.map((entry, i) => (i === index ? { ...entry, tile: tool } : entry)),
+      current.map((entry, i) =>
+        i === index
+          ? { tile: tool, tree: tool === "water" ? false : entry.tree }
+          : entry,
+      ),
     );
     const x = index % GRID_W;
     const y = Math.floor(index / GRID_W);
-    flashWrite(`level.Tiles[${x},${y}] = ${tool[0].toUpperCase()}${tool.slice(1)}Tile`);
+    flashWrite(`level.Tiles[${x},${y}] = ${tileArt[tool].record}`);
   }
 
   function sameTile(x: number, y: number, tile: Tile): boolean {
@@ -124,8 +153,10 @@ export function LevelEditor() {
           </h2>
           <p className="mt-4 text-lg text-ink-dim">
             A collaborative level editor with pages, layers, smart tiles, and
-            object palettes — where any tile can be static art <em>or</em> live
-            save data. Paint below, plant some trees, then grab the axe.
+            object palettes — where any tile can be static art{" "}
+            <em>or</em>{" "}
+            live save data. Tend the Gobl-Inn&apos;s night garden below, then
+            grab the axe.
           </p>
         </motion.div>
 
@@ -137,28 +168,62 @@ export function LevelEditor() {
             className="glass glow-ring relative flex flex-col rounded-2xl p-6"
           >
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-edge pb-4">
-              <p className="font-display font-bold text-ink-dim">
-                🗺 GardenPatch · Background layer
+              <p className="min-w-0 truncate font-display font-bold text-ink-dim">
+                🌒 Gobl-Inn back garden · Background
               </p>
               <div className="flex gap-1.5">
-                {tools.map((entry) => (
+                {tileTools.map((id) => (
                   <button
-                    key={entry.id}
-                    onClick={() => setTool(entry.id)}
-                    title={entry.label}
-                    className={`rounded-lg px-2.5 py-1.5 text-lg transition-all ${
-                      tool === entry.id
+                    key={id}
+                    onClick={() => setTool(id)}
+                    title={tileArt[id].label}
+                    aria-label={tileArt[id].label}
+                    className={`rounded-lg p-1.5 transition-all ${
+                      tool === id
                         ? "bg-blurple/30 ring-1 ring-blurple-bright"
                         : "hover:bg-panel-2"
                     }`}
                   >
-                    {entry.emoji}
+                    <span
+                      className="block size-5 rounded-[5px]"
+                      style={{
+                        backgroundColor: tileArt[id].base,
+                        backgroundImage: tileArt[id].uri,
+                        backgroundSize: "100% 100%",
+                        imageRendering: "pixelated",
+                        boxShadow: "inset 0 0 0 1px rgb(232 230 245 / 0.12)",
+                      }}
+                    />
                   </button>
                 ))}
+                <button
+                  onClick={() => setTool("tree")}
+                  title="Oak tree"
+                  aria-label="Oak tree"
+                  className={`rounded-lg p-1.5 transition-all ${
+                    tool === "tree"
+                      ? "bg-blurple/30 ring-1 ring-blurple-bright"
+                      : "hover:bg-panel-2"
+                  }`}
+                >
+                  <TreeSprite className="size-5" />
+                </button>
+                <button
+                  onClick={() => setTool("axe")}
+                  title="Axe"
+                  aria-label="Axe"
+                  className={`rounded-lg p-1.5 transition-all ${
+                    tool === "axe"
+                      ? "bg-blurple/30 ring-1 ring-blurple-bright"
+                      : "hover:bg-panel-2"
+                  }`}
+                >
+                  <Axe className="size-5 text-neon-yellow" />
+                </button>
               </div>
             </div>
             <div
-              className="mt-5 grid touch-none select-none gap-px overflow-hidden rounded-xl bg-void/60 p-1.5"
+              className="mt-5 grid touch-none select-none gap-0 overflow-hidden rounded-xl border border-edge"
               style={{ gridTemplateColumns: `repeat(${GRID_W}, minmax(0, 1fr))` }}
             >
               {cells.map((cell, index) => {
@@ -179,13 +244,17 @@ export function LevelEditor() {
                     onPointerEnter={() => {
                       if (painting.current) applyTool(index);
                     }}
-                    className="relative grid aspect-square cursor-crosshair place-items-center"
+                    className="relative grid aspect-square cursor-crosshair place-items-center transition-[filter] duration-75 hover:brightness-150"
                     style={{
-                      backgroundColor: tileColors[tile],
-                      borderTopLeftRadius: !top && !left ? 8 : 0,
-                      borderTopRightRadius: !top && !right ? 8 : 0,
-                      borderBottomLeftRadius: !bottom && !left ? 8 : 0,
-                      borderBottomRightRadius: !bottom && !right ? 8 : 0,
+                      backgroundColor: tileArt.grass.base,
+                      backgroundImage: `${tileArt[tile].uri}, ${tileArt.grass.uri}`,
+                      backgroundSize: "100% 100%",
+                      imageRendering: "pixelated",
+                      borderTopLeftRadius: !top && !left ? 10 : 0,
+                      borderTopRightRadius: !top && !right ? 10 : 0,
+                      borderBottomLeftRadius: !bottom && !left ? 10 : 0,
+                      borderBottomRightRadius: !bottom && !right ? 10 : 0,
+                      boxShadow: "inset 0 0 0 0.5px rgb(11 10 20 / 0.45)",
                     }}
                   >
                     {cell.tree && (
@@ -193,9 +262,9 @@ export function LevelEditor() {
                         initial={{ scale: 0, rotate: -20 }}
                         animate={{ scale: 1, rotate: 0 }}
                         transition={{ type: "spring", damping: 10 }}
-                        className="text-base md:text-xl"
+                        className="block w-[88%]"
                       >
-                        🌳
+                        <TreeSprite className="h-auto w-full drop-shadow-[0_2px_4px_rgb(0_0_0/0.5)]" />
                       </motion.span>
                     )}
                   </div>
@@ -234,7 +303,7 @@ export function LevelEditor() {
                   ▾ Foreground · OakTree ×{treeCount}
                 </li>
                 <li className="rounded-md px-3 py-1.5">
-                  ▾ Background · GrassTile / DirtTile / WaterTile
+                  ▾ Background · GrassTile / SoilTile / PondTile / StonePathTile
                 </li>
                 <li className="rounded-md px-3 py-1.5 text-ink-dim/70">
                   ▸ Collisions · auto from colliders
