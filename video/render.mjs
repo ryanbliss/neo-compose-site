@@ -7,10 +7,15 @@ import ffmpegPath from "ffmpeg-static";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FPS = 30;
-const DURATION = 30;
+const DURATION = 52;
 const FRAMES = FPS * DURATION;
 const framesDir = path.join(__dirname, "frames");
-const outFile = path.join(__dirname, "neo-compose-30s.mp4");
+const outFile = path.join(__dirname, "neo-compose-promo.mp4");
+
+console.log("Generating chiptune…");
+execFileSync(process.execPath, [path.join(__dirname, "music.mjs")], {
+  stdio: "inherit",
+});
 
 rmSync(framesDir, { recursive: true, force: true });
 mkdirSync(framesDir, { recursive: true });
@@ -57,10 +62,9 @@ execFileSync(
     // video: captured frames
     "-framerate", String(FPS),
     "-i", path.join(framesDir, "frame_%04d.jpg"),
-    // audio: subtle generated ambient pad (A2 + E3 + A3 + C#4), lowpassed
-    "-f", "lavfi",
-    "-i",
-    "aevalsrc=0.040*sin(2*PI*110*t)+0.034*sin(2*PI*164.81*t)+0.026*sin(2*PI*220*t)+0.018*sin(2*PI*277.18*t):d=30,lowpass=f=900,tremolo=f=0.13:d=0.35,afade=t=in:d=2,afade=t=out:st=26:d=4",
+    // audio: generated original chiptune
+    "-i", path.join(__dirname, "chiptune.wav"),
+    "-af", "lowpass=f=9500,volume=0.85,afade=t=out:st=47:d=5",
     "-c:v", "libx264",
     "-preset", "medium",
     "-crf", "19",

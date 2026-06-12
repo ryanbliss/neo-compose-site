@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer-core";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const times = [2.2, 6.8, 12.4, 17.6, 24.6, 27.8];
+const times = [13.2, 24.4, 31.9, 36.8, 41.4, 49.2];
 
 const browser = await puppeteer.launch({
   executablePath:

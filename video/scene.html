@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Neo Compose — 30s motion graphic</title>
+<title>Neo Compose — 52s motion graphic</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
@@ -50,12 +50,12 @@
   #fade { position: absolute; inset: 0; background: #000; opacity: 0; }
 
   .scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
-
+  .cap { position: absolute; top: 92px; width: 100%; text-align: center; }
   .kicker {
     font-family: "JetBrains Mono", monospace; font-size: 26px; letter-spacing: 0.08em;
     color: var(--dim); text-transform: uppercase;
   }
-  .headline { font-size: 84px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.04; }
+  .headline { font-size: 76px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.04; margin-top: 14px; }
   .grad {
     background: linear-gradient(100deg, var(--blurple-bright), var(--ice) 40%, var(--pink) 80%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -64,6 +64,17 @@
     background: rgb(20 18 31 / 0.82); border: 1.5px solid var(--edge); border-radius: 22px;
     box-shadow: 0 0 0 1px rgb(139 124 255 / 0.18), 0 0 70px rgb(108 92 231 / 0.22);
   }
+  .ptitle { font-size: 25px; font-weight: 700; color: var(--dim); }
+  .live {
+    font-family: "JetBrains Mono", monospace; font-size: 21px; font-weight: 700; color: var(--green);
+    background: rgb(61 220 132 / 0.14); padding: 6px 14px; border-radius: 8px;
+  }
+  .chip {
+    position: absolute; font-family: "JetBrains Mono", monospace; font-size: 24px;
+    background: rgb(108 92 231 / 0.22); color: var(--blurple-bright);
+    border: 1px solid rgb(139 124 255 / 0.4); padding: 12px 20px; border-radius: 12px;
+  }
+  .cursor { color: var(--blurple-bright); }
 
   /* ---- intro ---- */
   #sA { display: grid; place-items: center; }
@@ -71,12 +82,11 @@
   #sA img { width: 190px; height: 190px; filter: drop-shadow(0 0 36px rgb(108 92 231 / 0.55)); }
   #sA .word { font-size: 64px; font-weight: 700; margin-top: 28px; }
   #sA .word b { color: var(--blurple-bright); }
-  #sA .head { margin-top: 52px; }
+  #sA .head { font-size: 84px; margin-top: 52px; }
   #sA .sub { margin-top: 26px; font-size: 30px; color: var(--dim); }
 
   /* ---- flow ---- */
-  #sB .cap { position: absolute; top: 96px; width: 100%; text-align: center; }
-  #graph { position: absolute; left: 50%; top: 56%; width: 1240px; height: 700px; transform: translate(-50%, -50%); }
+  #graph { position: absolute; left: 50%; top: 57%; width: 1240px; height: 700px; transform: translate(-50%, -50%); }
   #graph svg.edges { position: absolute; inset: 0; width: 100%; height: 100%; }
   .node {
     position: absolute; padding: 22px 28px; border-radius: 18px; min-width: 300px;
@@ -85,50 +95,45 @@
   }
   .node .nt { font-size: 30px; font-weight: 700; }
   .node .nb { font-family: "JetBrains Mono", monospace; font-size: 22px; color: var(--dim); margin-top: 8px; }
-  .chip {
-    position: absolute; font-family: "JetBrains Mono", monospace; font-size: 24px;
-    background: rgb(108 92 231 / 0.22); color: var(--blurple-bright);
-    border: 1px solid rgb(139 124 255 / 0.4); padding: 12px 20px; border-radius: 12px;
-  }
 
-  /* ---- save ---- */
-  #sC .cap { position: absolute; top: 110px; width: 100%; text-align: center; }
-  #savePanel {
-    position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%);
-    width: 880px; padding: 36px 40px;
+  /* ---- save + sliders ---- */
+  #saveRow { position: absolute; left: 50%; top: 59%; transform: translate(-50%, -50%); display: flex; gap: 30px; align-items: stretch; }
+  #sliderPanel { width: 520px; padding: 30px 34px; }
+  #sliderRow { display: flex; justify-content: space-between; margin-top: 26px; }
+  .vslider { width: 130px; text-align: center; }
+  .vslider .lab { font-family: "JetBrains Mono", monospace; font-size: 20px; color: var(--dim); height: 56px; }
+  .track { position: relative; width: 18px; height: 230px; margin: 10px auto 0; background: var(--panel2); border-radius: 999px; }
+  .fill { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 999px; }
+  .knob {
+    position: absolute; left: 50%; width: 40px; height: 40px; border-radius: 50%;
+    transform: translate(-50%, -50%); background: var(--ink);
+    box-shadow: 0 4px 14px rgb(0 0 0 / 0.5), 0 0 0 5px rgb(20 18 31 / 0.9);
   }
-  #savePanel .bar { display: flex; justify-content: space-between; align-items: center; }
-  #savePanel .fname { font-family: "JetBrains Mono", monospace; font-size: 26px; color: var(--dim); }
-  #savePanel .fname i { color: var(--green); font-style: normal; }
-  .live {
-    font-family: "JetBrains Mono", monospace; font-size: 22px; font-weight: 700; color: var(--green);
-    background: rgb(61 220 132 / 0.14); padding: 6px 14px; border-radius: 8px;
-  }
-  #saveJson {
-    margin-top: 26px; background: rgb(11 10 20 / 0.75); border-radius: 16px; padding: 30px;
-    font-family: "JetBrains Mono", monospace; font-size: 30px; line-height: 1.55; color: var(--ice);
-    min-height: 380px; white-space: pre;
-  }
-  .cursor { color: var(--blurple-bright); }
+  .vslider .val { font-family: "JetBrains Mono", monospace; font-size: 27px; margin-top: 18px; color: var(--ink); }
+  #savePanel2 { width: 800px; padding: 30px 36px; }
+  #saveLines { margin-top: 24px; background: rgb(11 10 20 / 0.75); border-radius: 16px; padding: 28px 30px; font-family: "JetBrains Mono", monospace; font-size: 29px; line-height: 1.62; color: var(--ice); }
+  #saveLines .row { white-space: pre; }
+  .jval { border-radius: 8px; padding: 0 6px; transition: none; }
 
   /* ---- code ---- */
-  #sD .cap { position: absolute; top: 110px; width: 100%; text-align: center; }
-  #codePanel {
-    position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%);
-    width: 1180px; overflow: hidden; padding: 0;
-  }
+  #codePanel { position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%); width: 1180px; overflow: hidden; }
   #codePanel .tabs { display: flex; gap: 8px; padding: 18px 24px; border-bottom: 1.5px solid var(--edge); }
-  #codePanel .tab {
-    font-family: "JetBrains Mono", monospace; font-size: 22px; padding: 8px 22px; border-radius: 10px; color: var(--dim);
-  }
+  #codePanel .tab { font-family: "JetBrains Mono", monospace; font-size: 22px; padding: 8px 22px; border-radius: 10px; color: var(--dim); }
   #codePanel .tab.on { background: rgb(108 92 231 / 0.25); color: var(--blurple-bright); }
-  #codeBody {
-    padding: 34px 40px; font-family: "JetBrains Mono", monospace; font-size: 28px; line-height: 1.7;
-    min-height: 460px; white-space: pre;
-  }
+  #codeBody { padding: 34px 40px; font-family: "JetBrains Mono", monospace; font-size: 28px; line-height: 1.7; min-height: 460px; white-space: pre; }
+
+  /* ---- agents ---- */
+  #agRow { position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); display: flex; gap: 30px; }
+  #agTerm { width: 700px; padding: 30px 34px; }
+  #agTermBody { margin-top: 22px; background: rgb(11 10 20 / 0.75); border-radius: 16px; padding: 28px 30px; font-family: "JetBrains Mono", monospace; font-size: 27px; line-height: 1.75; min-height: 320px; color: var(--dim); }
+  #agTermBody .g { color: var(--green); }
+  #agTermBody .b { color: var(--blurple-bright); }
+  #agCode { width: 700px; padding: 30px 34px; }
+  #agCodeBody { margin-top: 22px; background: rgb(11 10 20 / 0.75); border-radius: 16px; padding: 28px 30px; font-family: "JetBrains Mono", monospace; font-size: 26px; line-height: 1.75; white-space: pre; }
+  #agNew { display: block; width: fit-content; border-radius: 8px; padding: 0 6px; margin-left: -6px; }
+  #agSync { font-family: "JetBrains Mono", monospace; font-size: 21px; font-weight: 700; color: var(--green); background: rgb(61 220 132 / 0.14); padding: 6px 14px; border-radius: 8px; float: right; }
 
   /* ---- editor ---- */
-  #sE .cap { position: absolute; top: 92px; width: 100%; text-align: center; }
   #edWrap { position: absolute; left: 50%; top: 59%; transform: translate(-50%, -50%); padding: 30px; }
   #edTitle { font-size: 26px; font-weight: 700; color: var(--dim); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; width: 1056px; }
   #edClock { font-family: "JetBrains Mono", monospace; font-size: 22px; color: var(--ink); background: rgb(27 24 48 / 0.9); border: 1px solid var(--edge); border-radius: 10px; padding: 8px 16px; }
@@ -139,19 +144,55 @@
   #goblin svg { width: 100%; height: auto; filter: drop-shadow(0 3px 5px rgb(0 0 0 / 0.55)); }
   #edChip { left: auto; right: 26px; bottom: 26px; top: auto; }
 
+  /* ---- security ---- */
+  #secRoles { position: absolute; top: 300px; width: 100%; display: flex; justify-content: center; gap: 18px; }
+  .role {
+    font-size: 27px; font-weight: 700; padding: 14px 30px; border-radius: 16px;
+    background: rgb(20 18 31 / 0.85); border: 1.5px solid var(--edge); color: var(--dim);
+  }
+  .role.on { background: var(--blurple); color: #fff; border-color: var(--blurple); box-shadow: 0 0 30px rgb(108 92 231 / 0.5); }
+  #secCards { position: absolute; top: 430px; width: 100%; display: flex; justify-content: center; gap: 26px; }
+  .scard { width: 380px; padding: 30px 32px; border-radius: 22px; background: rgb(20 18 31 / 0.85); border: 1.5px solid var(--edge); }
+  .scard .st { font-size: 28px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .scard .sn { font-size: 20px; color: var(--dim); margin-top: 6px; }
+  .scard .chips { display: flex; gap: 12px; margin-top: 24px; }
+  .pchip { font-family: "JetBrains Mono", monospace; font-size: 21px; font-weight: 700; padding: 8px 16px; border-radius: 9px; }
+  .pchip.ok { color: var(--green); background: rgb(61 220 132 / 0.14); }
+  .pchip.no { color: var(--dim); background: var(--panel2); text-decoration: line-through; opacity: 0.7; }
+  .pbadge { font-family: "JetBrains Mono", monospace; font-size: 19px; font-weight: 700; }
+  #secNote { position: absolute; top: 740px; width: 100%; text-align: center; font-size: 27px; color: var(--dim); }
+
+  /* ---- wiki ---- */
+  #wikiRow { position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); display: flex; gap: 30px; }
+  #wTable { width: 620px; padding: 30px 34px; }
+  #wTable .tbl { margin-top: 22px; border: 1.5px solid var(--edge); border-radius: 14px; overflow: hidden; }
+  .trow { display: grid; grid-template-columns: 2.1fr 1.5fr 0.8fr; padding: 18px 24px; font-size: 25px; color: var(--dim); }
+  .trow.hdr { background: var(--panel2); font-family: "JetBrains Mono", monospace; font-size: 20px; }
+  .trow.on { background: rgb(108 92 231 / 0.22); color: var(--ink); }
+  #wDetail { width: 760px; padding: 30px 36px; position: relative; }
+  .wstack { position: absolute; inset: 30px 36px; opacity: 0; }
+  .wstack h3 { font-size: 40px; font-weight: 700; }
+  .wstack .sub { font-family: "JetBrains Mono", monospace; font-size: 20px; color: var(--dim); margin-top: 6px; }
+  .wstack .sect { font-size: 22px; font-weight: 700; color: var(--dim); margin-top: 30px; }
+  .clog { display: flex; gap: 14px; align-items: center; margin-top: 14px; font-size: 23px; color: var(--dim); background: rgb(11 10 20 / 0.55); border-radius: 12px; padding: 12px 18px; }
+  .clog b { font-family: "JetBrains Mono", monospace; font-size: 19px; color: var(--blurple-bright); background: rgb(108 92 231 / 0.2); padding: 4px 12px; border-radius: 8px; font-weight: 700; }
+  .dlg { display: inline-block; font-size: 21px; color: var(--dim); border: 1px solid var(--edge); background: var(--panel2); border-radius: 999px; padding: 8px 20px; margin: 14px 10px 0 0; }
+
   /* ---- outro ---- */
   #sF { display: grid; place-items: center; }
   #sF .stack { text-align: center; }
   #sF img { width: 150px; height: 150px; filter: drop-shadow(0 0 32px rgb(108 92 231 / 0.55)); }
   #sF .word { font-size: 56px; font-weight: 700; margin-top: 24px; }
   #sF .word b { color: var(--blurple-bright); }
+  #outTag { margin-top: 30px; font-size: 36px; color: var(--dim); }
   #cli {
-    margin: 44px auto 0; font-family: "JetBrains Mono", monospace; font-size: 34px; color: var(--dim);
+    margin: 36px auto 0; font-family: "JetBrains Mono", monospace; font-size: 34px; color: var(--dim);
     background: rgb(20 18 31 / 0.85); border: 1.5px solid var(--edge); border-radius: 16px;
     padding: 20px 34px; display: inline-block; min-width: 640px; text-align: left;
   }
   #cli i { color: var(--green); font-style: normal; }
-  #url { margin-top: 30px; font-size: 40px; font-weight: 700; color: var(--ink); }
+  #url { margin-top: 30px; font-size: 44px; font-weight: 700; }
+  #url span { color: var(--blurple-bright); }
   #chips { position: absolute; bottom: 90px; left: 0; width: 100%; overflow: hidden; }
   #chipRow { display: flex; gap: 18px; width: max-content; }
   .fchip {
@@ -179,40 +220,60 @@
   <section class="scene" id="sB">
     <div class="cap">
       <div class="kicker">Dialogue flows</div>
-      <div class="headline" style="font-size:72px; margin-top:14px;">Branching dialogue, <span class="grad">wired to your data</span>.</div>
+      <div class="headline">Branching dialogue, <span class="grad">wired to your data</span>.</div>
     </div>
-    <div id="graph">
-      <svg class="edges" viewBox="0 0 1240 700" fill="none"></svg>
-    </div>
+    <div id="graph"><svg class="edges" viewBox="0 0 1240 700" fill="none"></svg></div>
   </section>
 
-  <!-- C: save -->
+  <!-- C: save + sliders -->
   <section class="scene" id="sC">
     <div class="cap">
-      <div class="kicker">Cloud saves · realtime</div>
-      <div class="headline" style="font-size:72px; margin-top:14px;">Choices that <span class="grad">stick</span>.</div>
+      <div class="kicker">Cloud saves · live sessions</div>
+      <div class="headline">Choices that <span class="grad">stick</span>.</div>
     </div>
-    <div class="glass" id="savePanel">
-      <div class="bar">
-        <span class="fname"><i>●</i> wandering-otter-619.save</span>
-        <span class="live" id="liveBadge">LIVE</span>
+    <div id="saveRow">
+      <div class="glass" id="sliderPanel">
+        <span class="ptitle">🌐 Neo Compose · web editor</span>
+        <div id="sliderRow"></div>
       </div>
-      <div id="saveJson"></div>
+      <div class="glass" id="savePanel2">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="ptitle mono" style="font-size:23px;"><span style="color:var(--green)">●</span> wandering-otter-619.save</span>
+          <span class="live" id="liveBadge">LIVE</span>
+        </div>
+        <div id="saveLines"></div>
+      </div>
     </div>
-    <div class="chip" id="saveChip" style="left:auto; right:380px; top:74%; opacity:0;">✏️ save.Items.Add(CursedSword)</div>
+    <div class="chip" id="saveChip" style="left:auto; right:330px; top:77%; opacity:0;">✏️ save.Items.Add(CursedSword)</div>
   </section>
 
   <!-- D: code -->
   <section class="scene" id="sD">
     <div class="cap">
       <div class="kicker">Typed SDK · Unity</div>
-      <div class="headline" style="font-size:72px; margin-top:14px;">Generated C# that feels <span class="grad">hand-written</span>.</div>
+      <div class="headline">Generated C# that feels <span class="grad">hand-written</span>.</div>
     </div>
     <div class="glass" id="codePanel">
-      <div class="tabs">
-        <span class="tab on">Unity C#</span><span class="tab">neo CLI</span><span class="tab">NeoScript</span>
-      </div>
+      <div class="tabs"><span class="tab on">Unity C#</span><span class="tab">neo CLI</span><span class="tab">NeoScript</span></div>
       <div id="codeBody"></div>
+    </div>
+  </section>
+
+  <!-- Ag: agents -->
+  <section class="scene" id="sAg">
+    <div class="cap">
+      <div class="kicker">Built for humans <b style="color:var(--green)">and AI agents</b></div>
+      <div class="headline">The UI <span class="grad">is</span> the code.</div>
+    </div>
+    <div id="agRow">
+      <div class="glass" id="agTerm">
+        <span class="ptitle">🤖 agent session</span>
+        <div id="agTermBody"></div>
+      </div>
+      <div class="glass" id="agCode">
+        <span class="ptitle mono" style="font-size:23px;">neo/Schema/Save.cs</span><span id="agSync">IN SYNC</span>
+        <div id="agCodeBody"></div>
+      </div>
     </div>
   </section>
 
@@ -220,7 +281,7 @@
   <section class="scene" id="sE">
     <div class="cap">
       <div class="kicker">Level editor · coming soon</div>
-      <div class="headline" style="font-size:72px; margin-top:14px;">Design levels like it&rsquo;s <span class="grad">Figma</span>.</div>
+      <div class="headline">Design levels like it&rsquo;s <span class="grad">Figma</span>.</div>
     </div>
     <div class="glass" id="edWrap">
       <div id="edTitle"><span>🌒 Gobl-Inn back garden · Background</span><span id="edClock">🕐 06:00 · Grubbins: tend the soil</span></div>
@@ -229,13 +290,65 @@
     <div class="chip" id="edChip" style="opacity:0;">✏️ save.Quests.Firewood = Done</div>
   </section>
 
+  <!-- Sec: security -->
+  <section class="scene" id="sSec">
+    <div class="cap">
+      <div class="kicker">Roles · channels · scoped OAuth</div>
+      <div class="headline">Ship to the <span class="grad">right players</span>.</div>
+    </div>
+    <div id="secRoles"></div>
+    <div id="secCards"></div>
+    <div id="secNote"></div>
+  </section>
+
+  <!-- Wiki -->
+  <section class="scene" id="sWiki">
+    <div class="cap">
+      <div class="kicker">Wiki · live database blocks</div>
+      <div class="headline">Docs that <span class="grad">can&rsquo;t go stale</span>.</div>
+    </div>
+    <div id="wikiRow">
+      <div class="glass" id="wTable">
+        <span class="ptitle">📖 Cast of The Rusty Gobl-Inn</span>
+        <div class="tbl">
+          <div class="trow hdr"><span>Name</span><span>Role</span><span style="text-align:right">❤️</span></div>
+          <div class="trow" id="wr0"><span>👺 Grubbins</span><span>Shopkeeper</span><span style="text-align:right">12</span></div>
+          <div class="trow" id="wr1"><span>🐀 Bartholomew</span><span>Shop rat</span><span style="text-align:right">99</span></div>
+          <div class="trow" id="wr2"><span>👑 The Rat King</span><span>??? (DLC)</span><span style="text-align:right">0</span></div>
+        </div>
+      </div>
+      <div class="glass" id="wDetail">
+        <div class="wstack" id="ws0">
+          <h3>👺 Grubbins</h3>
+          <div class="sub">Assets.NPCs.Grubbins · Shopkeeper</div>
+          <div class="sect">⏱ Changelog — auto-linked to values</div>
+          <div class="clog"><b>1.2.0</b> Friendship default 0 → 12 (returning players)</div>
+          <div class="clog"><b>1.1.0</b> Added CursedSword to shop inventory</div>
+          <div class="clog"><b>1.0.0</b> Created with role Shopkeeper</div>
+          <div class="sect">🔗 Linked dialogues</div>
+          <div><span class="dlg">💬 Sword sales pitch</span><span class="dlg">💬 Curse disclosure</span><span class="dlg">💬 Haggling 101</span></div>
+        </div>
+        <div class="wstack" id="ws1">
+          <h3>🐀 Bartholomew</h3>
+          <div class="sub">Assets.NPCs.Bartholomew · Shop rat</div>
+          <div class="sect">⏱ Changelog — auto-linked to values</div>
+          <div class="clog"><b>1.2.0</b> Promoted from prop to NPC (community demand)</div>
+          <div class="clog"><b>1.1.2</b> Bite chance 100% → 97%</div>
+          <div class="sect">🔗 Linked dialogues</div>
+          <div><span class="dlg">💬 Squeak (loving)</span><span class="dlg">💬 Squeak (menacing)</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- F: outro -->
   <section class="scene" id="sF">
     <div class="stack">
       <img src="logo.svg" alt="" />
       <div class="word">neo<b>compose</b></div>
+      <div id="outTag">Schemas · dialogue · saves · levels — humans and agents, one source of truth.</div>
       <div id="cli"><i>$</i> <span id="cliText"></span><span class="cursor" id="cliCur">▌</span></div>
-      <div id="url">app.neocompose.com</div>
+      <div id="url"><span>neocompose.com</span></div>
     </div>
     <div id="chips"><div id="chipRow"></div></div>
   </section>
@@ -250,9 +363,10 @@ const seg = (t, a, b) => clamp01((t - a) / (b - a));
 const ease = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
 const backOut = (p) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };
 const fadeIO = (t, a, b, f = 0.55) => Math.min(seg(t, a, a + f), 1 - seg(t, b - f, b));
+const lerp = (a, b, p) => a + (b - a) * p;
 const $ = (id) => document.getElementById(id);
 
-/* ============ pixel art (ported from the site) ============ */
+/* ============ pixel art ============ */
 const px = (x, y, f, w = 1, h = 1, o) =>
   `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"${o !== undefined ? ` opacity="${o}"` : ""}/>`;
 const svgUri = (body) =>
@@ -269,20 +383,23 @@ const GOBLIN = `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="5
 const CHEST = `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><circle cx="8" cy="9" r="6" fill="#ffd166" opacity="0.14"/><rect x="3" y="14" width="10" height="1" fill="#000" opacity="0.35"/><rect x="3" y="5" width="10" height="3" fill="#7d5832"/><rect x="3" y="5" width="10" height="1" fill="#946a3d"/><rect x="3" y="8" width="10" height="6" fill="#6b4a2a"/><rect x="3" y="13" width="10" height="1" fill="#503620"/><rect x="4" y="5" width="1" height="9" fill="#8f6a3e"/><rect x="11" y="5" width="1" height="9" fill="#8f6a3e"/><rect x="7" y="7" width="2" height="3" fill="#ffd166"/><rect x="7" y="9" width="2" height="1" fill="#c79a3e"/></svg>`;
 const SHROOM = `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><circle cx="8" cy="8" r="5.5" fill="#ff4d9d" opacity="0.16"/><rect x="5" y="15" width="6" height="1" fill="#000" opacity="0.3"/><rect x="7" y="10" width="2" height="5" fill="#cfc4e8"/><rect x="7" y="10" width="1" height="5" fill="#e8e6f5"/><rect x="4" y="7" width="8" height="3" fill="#ff4d9d"/><rect x="5" y="5" width="6" height="2" fill="#ff4d9d"/><rect x="6" y="4" width="4" height="1" fill="#ff6fb1"/><rect x="6" y="6" width="1" height="1" fill="#ffd166"/><rect x="9" y="8" width="1" height="1" fill="#ffd166"/><rect x="5" y="8" width="1" height="1" fill="#ffb3d4"/></svg>`;
 
-/* ============ timeline ============ */
+/* ============ timeline (52s) ============ */
 const T = {
-  A: [0, 4.4],
-  B: [4.0, 9.6],
-  C: [9.2, 14.8],
-  D: [14.4, 20.0],
-  E: [19.6, 25.4],
-  F: [25.0, 30],
+  A:    [0, 4.4],
+  B:    [4.0, 10.0],
+  C:    [9.6, 16.4],
+  D:    [16.0, 21.8],
+  Ag:   [21.4, 27.6],
+  E:    [27.2, 33.8],
+  Sec:  [33.4, 39.6],
+  Wiki: [39.2, 45.0],
+  F:    [44.6, 52.0],
 };
 
-/* ============ scene B: flow graph ============ */
+/* ============ B: flow graph ============ */
 const NODES = [
   { id: "trigger", x: 470, y: 0,   w: 320, t: "⚡ Trigger", b: "save.Gold >= 50", c: "var(--yellow)" },
-  { id: "choice",  x: 420, y: 170, w: 420, t: "💬 Choice — cursed sword", b: "“Only 10% cursed.”", c: "var(--blurple-bright)" },
+  { id: "choice",  x: 400, y: 170, w: 460, t: "💬 Choice — cursed sword", b: "“Only 10% cursed.”", c: "var(--blurple-bright)" },
   { id: "buy",     x: 90,  y: 390, w: 320, t: "🪙 Buy it", b: "save.Gold -= 50", c: "var(--ice)" },
   { id: "rat",     x: 790, y: 390, w: 420, t: "🐀 Pet the shop rat", b: "save.RatFriendship += 1", c: "var(--pink)" },
   { id: "act",     x: 450, y: 580, w: 380, t: "🗡 Action", b: "save.Items.Add(CursedSword)", c: "var(--green)" },
@@ -293,9 +410,7 @@ const nodeEls = {};
 for (const n of NODES) {
   const el = document.createElement("div");
   el.className = "node";
-  el.style.left = n.x + "px";
-  el.style.top = n.y + "px";
-  el.style.width = n.w + "px";
+  el.style.cssText = `left:${n.x}px; top:${n.y}px; width:${n.w}px;`;
   el.innerHTML = `<div class="nt" style="color:${n.c}">${n.t}</div><div class="nb">${n.b}</div>`;
   graph.appendChild(el);
   nodeEls[n.id] = el;
@@ -315,18 +430,37 @@ ratChip.style.cssText = "left:880px; top:520px; opacity:0;";
 ratChip.textContent = "✏️ written to the save file";
 graph.appendChild(ratChip);
 
-/* ============ scene C: save json ============ */
-const SAVE_TEXT = `{
-  "values": {
-    "Gold": 50,
-    "RatFriendship": 1,
-    "Items": ["CursedSword"],
-    "Quests": { "Firewood": "Active" }
-  }
-}`;
+/* ============ C: sliders + json ============ */
+const SLIDERS = [
+  { key: "Gold",          color: "var(--ice)",   min: 0, max: 100, from: 80,   to: 50,   win: [1.7, 2.9], fmt: (v) => String(Math.round(v)) },
+  { key: "CurseLevel",    color: "var(--pink)",  min: 0, max: 1,   from: 0.10, to: 0.35, win: [2.9, 4.1], fmt: (v) => v.toFixed(2) },
+  { key: "RatFriendship", color: "var(--green)", min: 0, max: 5,   from: 0,    to: 3,    win: [4.1, 5.3], fmt: (v) => String(Math.round(v)) },
+];
+const sliderRow = $("sliderRow");
+for (const s of SLIDERS) {
+  const el = document.createElement("div");
+  el.className = "vslider";
+  el.innerHTML = `<div class="lab">save.<br/>${s.key}</div><div class="track"><div class="fill" style="background:${s.color}"></div><div class="knob"></div></div><div class="val" style="color:${s.color}"></div>`;
+  sliderRow.appendChild(el);
+  s.fillEl = el.querySelector(".fill");
+  s.knobEl = el.querySelector(".knob");
+  s.valEl = el.querySelector(".val");
+}
+const saveLines = $("saveLines");
+saveLines.innerHTML = [
+  `<div class="row">{</div>`,
+  `<div class="row">  "values": {</div>`,
+  `<div class="row">    "Gold": <span class="jval" id="jGold"></span>,</div>`,
+  `<div class="row">    "CurseLevel": <span class="jval" id="jCurseLevel"></span>,</div>`,
+  `<div class="row">    "RatFriendship": <span class="jval" id="jRatFriendship"></span>,</div>`,
+  `<div class="row">    "Items": <span class="jval" id="jItems">[]</span></div>`,
+  `<div class="row">  }</div>`,
+  `<div class="row">}</div>`,
+].join("");
+const saveRowEls = [...saveLines.querySelectorAll(".row")];
 
-/* ============ scene D: code ============ */
-const K = "#ff4d9d", TY = "#5ad7ff", FN = "#8b7cff", CM = "#9b95b8", PL = "#e8e6f5", ST = "#ffd166";
+/* ============ D: code ============ */
+const K = "#ff4d9d", TY = "#5ad7ff", FN = "#8b7cff", CM = "#9b95b8", PL = "#e8e6f5";
 const CODE = [
   [["// Generated from your project — fully typed", CM]],
   [["var", K], [" neo = ", PL], ["RustyGoblInnNeo", TY], [".Instance;", PL]],
@@ -341,7 +475,20 @@ const CODE = [
 ];
 const CODE_TOTAL = CODE.flat().reduce((s, [x]) => s + x.length, 0);
 
-/* ============ scene E: editor grid ============ */
+/* ============ Ag: agents ============ */
+const AG_PROMPT = 'claude "give Grubbins a rat-king quest"';
+$("agCodeBody").innerHTML =
+`<span style="color:${K}">namespace</span> <span style="color:${TY}">RustyGoblInn.Schema</span>;
+
+<span style="color:${CM}">[NeoCustomType]</span>
+<span style="color:${K}">public partial class</span> <span style="color:${TY}">Save</span>
+{
+    <span style="color:${K}">public int</span> Gold = <span style="color:#ffd166">80</span>;
+<span id="agNew">    <span style="color:${K}">public int</span> RatKingFavor = <span style="color:#ffd166">0</span>;</span>    <span style="color:${K}">public</span> <span style="color:${TY}">List</span>&lt;<span style="color:${TY}">Item</span>&gt; Items = [];
+}`;
+const agNew = $("agNew");
+
+/* ============ E: editor grid ============ */
 const GW = 12, GH = 7, CS = 88;
 const layout = [];
 for (let i = 0; i < GW * GH; i++) layout.push({ tile: "grass", tree: false, rubble: false });
@@ -361,12 +508,10 @@ for (let i = 0; i < layout.length; i++) {
   const c = layout[i];
   const el = document.createElement("div");
   el.className = "cell";
-  el.style.backgroundImage = `${tileUris[c.tile]}`;
+  el.style.backgroundImage = tileUris[c.tile];
   el.style.backgroundSize = "100% 100%";
   el.style.backgroundColor = "#1b2a24";
-  let inner = "";
-  if (c.tree) inner = TREE;
-  el.innerHTML = inner;
+  if (c.tree) el.innerHTML = TREE;
   const rub = document.createElement("div");
   rub.style.cssText = `position:absolute; inset:0; background-image:${rubbleArt}; background-size:100% 100%; image-rendering:pixelated; z-index:3; opacity:${c.rubble ? 1 : 0};`;
   el.appendChild(rub);
@@ -374,16 +519,14 @@ for (let i = 0; i < layout.length; i++) {
   edGrid.appendChild(el);
   cellEls.push(el);
 }
-// chest + shroom (hidden until quest)
 const chestEl = document.createElement("div");
-chestEl.style.cssText = "position:absolute; z-index:4; width:72px; left:" + (11 * CS + 8) + "px; top:" + (1 * CS + 8) + "px; opacity:0;";
+chestEl.style.cssText = `position:absolute; z-index:4; width:72px; left:${11 * CS + 8}px; top:${1 * CS + 8}px; opacity:0;`;
 chestEl.innerHTML = CHEST;
 edGrid.appendChild(chestEl);
 const shroomEl = document.createElement("div");
-shroomEl.style.cssText = "position:absolute; z-index:4; width:60px; left:" + (10 * CS + 14) + "px; top:" + (2 * CS + 14) + "px; opacity:0;";
+shroomEl.style.cssText = `position:absolute; z-index:4; width:60px; left:${10 * CS + 14}px; top:${2 * CS + 14}px; opacity:0;`;
 shroomEl.innerHTML = SHROOM;
 edGrid.appendChild(shroomEl);
-// goblin
 const gob = document.createElement("div");
 gob.id = "goblin";
 gob.innerHTML = GOBLIN;
@@ -392,10 +535,32 @@ const WAYPOINTS = [
   { x: 0, y: 3 }, { x: 2, y: 3 }, { x: 4, y: 3 }, { x: 4, y: 4 }, { x: 6, y: 4 }, { x: 8, y: 4 },
 ];
 
-/* ============ scene F: chips ============ */
+/* ============ Sec: security ============ */
+const ROLES = [
+  { name: "👑 Owner",      dev: [1,1], stg: [1,1], prod: [1,1], badge: "🔒", note: "Org owners hold an immutable safety-net policy — never locked out." },
+  { name: "🛠 Developer",  dev: [1,1], stg: [1,1], prod: [1,0], badge: "🔒", note: "Edits schema and dialogue, ships to internal channels — production stays gated." },
+  { name: "🎮 Playtester", dev: [0,0], stg: [1,0], prod: [0,0], badge: "🔒", note: "Invited by email, signs in from the shipped game — sees exactly one beta channel." },
+  { name: "🕹 Player",     dev: [0,0], stg: [0,0], prod: [1,0], badge: "PUBLIC", note: "The public, after launch — production reads open wide, org channels stay invisible." },
+];
+const CHANNELS = [
+  { id: "dev",  label: "Development", note: "open to the team" },
+  { id: "stg",  label: "Staging / Beta", note: "invited playtesters" },
+  { id: "prod", label: "Production", note: "the public, once you ship" },
+];
+$("secRoles").innerHTML = ROLES.map((r, i) => `<span class="role" id="role${i}">${r.name}</span>`).join("");
+$("secCards").innerHTML = CHANNELS.map((c) => `
+  <div class="scard" id="card_${c.id}">
+    <div class="st"><span>${c.label}</span><span class="pbadge" id="badge_${c.id}"></span></div>
+    <div class="sn">${c.note}</div>
+    <div class="chips">
+      <span class="pchip" id="${c.id}_r">read</span>
+      <span class="pchip" id="${c.id}_p">publish</span>
+    </div>
+  </div>`).join("");
+
+/* ============ F: outro chips ============ */
 const CHIPS = ["🧬 Visual schemas","💬 Branching dialogue","🛠 Typed C# codegen","☁️ Cloud saves","⚡ Realtime live sync","🌍 ICU localization","🏷 Semver releases","📖 Game wiki","🤖 Agent-friendly CLI","🛡 Role-based policies","🚀 Release channels","🧩 Built for modding"];
 $("chipRow").innerHTML = [...CHIPS, ...CHIPS].map((c) => `<span class="fchip">${c}</span>`).join("");
-
 const CLI_TEXT = "npx @neocompose/cli init";
 
 /* ============ master seek ============ */
@@ -406,11 +571,11 @@ function setScene(id, t, [a, b]) {
   el.style.visibility = o <= 0.001 ? "hidden" : "visible";
   return o;
 }
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
 window.seek = function seek(t) {
-  // background drift
   $("bg-glow").style.transform = `translate(-50%, -50%) translate(${Math.sin(t * 0.35) * 40}px, ${Math.cos(t * 0.3) * 26}px) scale(${1 + Math.sin(t * 0.5) * 0.04})`;
-  $("fade").style.opacity = seg(t, 29.1, 30) * 1 + (1 - seg(t, 0, 0.5)) * 1;
+  $("fade").style.opacity = Math.max(seg(t, 51.0, 52), 1 - seg(t, 0, 0.5));
 
   /* A — intro */
   if (setScene("sA", t, T.A) > 0) {
@@ -438,36 +603,62 @@ window.seek = function seek(t) {
       pth.style.strokeDashoffset = dash;
       pth.style.opacity = seg(t, s + 0.9 + i * 0.18, s + 1.3 + i * 0.18);
     });
-    // rat highlight
-    const hl = seg(t, s + 3.4, s + 3.9);
-    nodeEls.rat.style.borderColor = hl > 0 ? `rgb(255 77 157 / ${0.25 + 0.75 * hl})` : "";
+    const hl = seg(t, s + 3.6, s + 4.1);
     nodeEls.rat.style.boxShadow = `0 18px 40px rgb(0 0 0 / 0.4), 0 0 ${hl * 46}px rgb(255 77 157 / ${hl * 0.5})`;
-    ratChip.style.opacity = seg(t, s + 3.8, s + 4.2);
-    ratChip.style.transform = `translateY(${(1 - ease(seg(t, s + 3.8, s + 4.3))) * 18}px)`;
+    nodeEls.rat.style.borderColor = hl > 0.01 ? `rgb(255 77 157 / ${0.25 + 0.75 * hl})` : "";
+    ratChip.style.opacity = seg(t, s + 4.0, s + 4.4);
+    ratChip.style.transform = `translateY(${(1 - ease(seg(t, s + 4.0, s + 4.5))) * 18}px)`;
   }
 
-  /* C — save */
+  /* C — save + sliders */
   if (setScene("sC", t, T.C) > 0) {
     const s = T.C[0];
-    const p = seg(t, s + 0.7, s + 3.4);
-    const n = Math.floor(p * SAVE_TEXT.length);
-    $("saveJson").innerHTML = SAVE_TEXT.slice(0, n).replace(/&/g, "&amp;").replace(/</g, "&lt;") + (p < 1 ? '<span class="cursor">▌</span>' : "");
+    // fast line-stagger reveal of JSON
+    saveRowEls.forEach((row, i) => {
+      const p = ease(seg(t, s + 0.4 + i * 0.09, s + 0.7 + i * 0.09));
+      row.style.opacity = p;
+      row.style.transform = `translateX(${(1 - p) * 18}px)`;
+    });
+    // slider panel slides in
+    $("sliderPanel").style.opacity = seg(t, s + 0.3, s + 0.8);
+    $("sliderPanel").style.transform = `translateX(${(1 - ease(seg(t, s + 0.3, s + 0.9))) * -40}px)`;
     $("liveBadge").style.opacity = 0.55 + 0.45 * Math.sin(t * 5) ** 2;
-    $("saveChip").style.opacity = seg(t, s + 3.7, s + 4.1);
-    $("saveChip").style.transform = `translateY(${(1 - ease(seg(t, s + 3.7, s + 4.2))) * 18}px)`;
+    // sliders drive values
+    for (const sl of SLIDERS) {
+      const p = ease(seg(t, s + sl.win[0], s + sl.win[1]));
+      const v = lerp(sl.from, sl.to, p);
+      const v01 = (v - sl.min) / (sl.max - sl.min);
+      sl.fillEl.style.height = `${v01 * 100}%`;
+      sl.knobEl.style.top = `${(1 - v01) * 100}%`;
+      sl.valEl.textContent = sl.fmt(v);
+      const jEl = $("j" + sl.key);
+      jEl.textContent = sl.fmt(v);
+      const active = t > s + sl.win[0] - 0.1 && t < s + sl.win[1] + 0.35;
+      jEl.style.background = active ? "rgb(108 92 231 / 0.4)" : "transparent";
+      jEl.style.color = active ? "var(--ink)" : "";
+      sl.knobEl.style.boxShadow = active
+        ? `0 4px 14px rgb(0 0 0 / 0.5), 0 0 0 5px rgb(20 18 31 / 0.9), 0 0 24px ${sl.color}`
+        : "0 4px 14px rgb(0 0 0 / 0.5), 0 0 0 5px rgb(20 18 31 / 0.9)";
+    }
+    // items append
+    const ip = seg(t, s + 5.4, s + 5.7);
+    const jItems = $("jItems");
+    jItems.textContent = ip > 0 ? '["CursedSword"]' : "[]";
+    jItems.style.background = ip > 0 && t < s + 6.2 ? "rgb(255 77 157 / 0.35)" : "transparent";
+    $("saveChip").style.opacity = seg(t, s + 5.3, s + 5.7);
+    $("saveChip").style.transform = `translateY(${(1 - ease(seg(t, s + 5.3, s + 5.8))) * 18}px)`;
   }
 
-  /* D — code */
+  /* D — code (fast type) */
   if (setScene("sD", t, T.D) > 0) {
     const s = T.D[0];
-    const budget = Math.floor(seg(t, s + 0.6, s + 3.6) * CODE_TOTAL);
-    let used = 0;
-    let html = "";
+    const budget = Math.floor(seg(t, s + 0.5, s + 2.6) * CODE_TOTAL);
+    let used = 0, html = "";
     for (const line of CODE) {
       let lineHtml = "";
       for (const [text, color] of line) {
         const take = Math.max(0, Math.min(text.length, budget - used));
-        if (take > 0) lineHtml += `<span style="color:${color}">${text.slice(0, take).replace(/&/g, "&amp;").replace(/</g, "&lt;")}</span>`;
+        if (take > 0) lineHtml += `<span style="color:${color}">${esc(text.slice(0, take))}</span>`;
         used += text.length;
       }
       html += lineHtml + "\n";
@@ -475,69 +666,127 @@ window.seek = function seek(t) {
     $("codeBody").innerHTML = html;
   }
 
+  /* Ag — agents */
+  if (setScene("sAg", t, T.Ag) > 0) {
+    const s = T.Ag[0];
+    const lines = [];
+    const promptChars = Math.floor(seg(t, s + 0.7, s + 1.9) * AG_PROMPT.length);
+    if (promptChars > 0) lines.push(`<span class="g">$</span> ${esc(AG_PROMPT.slice(0, promptChars))}${promptChars < AG_PROMPT.length ? '<span class="cursor">▌</span>' : ""}`);
+    if (t > s + 2.2) lines.push(`<span class="b">⚙ agent</span> editing neo/Schema/Save.cs…`);
+    if (t > s + 3.6) lines.push(`<span class="g">$</span> neo push`);
+    if (t > s + 4.4) lines.push(`<span class="g">✓ 1 record committed (minor bump)</span>`);
+    $("agTermBody").innerHTML = lines.join("<br/>");
+    // code line inserts
+    const ins = seg(t, s + 2.6, s + 3.1);
+    agNew.style.opacity = ins;
+    agNew.style.background = t > s + 2.6 && t < s + 4.0 ? "rgb(108 92 231 / 0.35)" : "transparent";
+    const sync = $("agSync");
+    if (t > s + 2.4 && t < s + 4.4) { sync.textContent = "SYNCING…"; sync.style.color = "var(--yellow)"; sync.style.background = "rgb(255 209 102 / 0.14)"; }
+    else { sync.textContent = "IN SYNC"; sync.style.color = "var(--green)"; sync.style.background = "rgb(61 220 132 / 0.14)"; }
+    $("agCode").style.opacity = seg(t, s + 0.5, s + 1.0);
+    $("agCode").style.transform = `translateX(${(1 - ease(seg(t, s + 0.5, s + 1.1))) * 40}px)`;
+  }
+
   /* E — editor */
   if (setScene("sE", t, T.E) > 0) {
     const s = T.E[0];
-    // tile wipe-in
     cellEls.forEach((el, i) => {
       const x = i % GW, y = Math.floor(i / GW);
       const d = (x + y) / (GW + GH);
-      const p = ease(seg(t, s + 0.4 + d * 1.1, s + 0.75 + d * 1.1));
-      el.style.opacity = p;
+      el.style.opacity = ease(seg(t, s + 0.4 + d * 1.1, s + 0.75 + d * 1.1));
       const inner = el.querySelector("svg");
       if (inner) inner.style.transform = `scale(${backOut(seg(t, s + 1.0 + d * 1.1, s + 1.5 + d * 1.1))})`;
     });
-    // goblin walk along waypoints
-    const wp = seg(t, s + 1.2, s + 4.6) * (WAYPOINTS.length - 1);
+    const wp = seg(t, s + 1.2, s + 4.8) * (WAYPOINTS.length - 1);
     const i0 = Math.min(WAYPOINTS.length - 2, Math.floor(wp));
     const f = wp - i0;
-    const ax = WAYPOINTS[i0].x + (WAYPOINTS[i0 + 1].x - WAYPOINTS[i0].x) * f;
-    const ay = WAYPOINTS[i0].y + (WAYPOINTS[i0 + 1].y - WAYPOINTS[i0].y) * f;
-    gob.style.left = ax * CS + "px";
-    gob.style.top = ay * CS - 8 + Math.sin(t * 11) * 2.5 + "px";
+    gob.style.left = (WAYPOINTS[i0].x + (WAYPOINTS[i0 + 1].x - WAYPOINTS[i0].x) * f) * CS + "px";
+    gob.style.top = (WAYPOINTS[i0].y + (WAYPOINTS[i0 + 1].y - WAYPOINTS[i0].y) * f) * CS - 8 + Math.sin(t * 11) * 2.5 + "px";
     gob.style.opacity = seg(t, s + 1.0, s + 1.4);
-    // clock
     const clock = $("edClock");
-    if (t < s + 2.4) clock.textContent = "🕐 06:00 · Grubbins: tend the soil";
-    else if (t < s + 3.8) clock.textContent = "🕐 09:00 · Grubbins: open the stall";
+    if (t < s + 2.6) clock.textContent = "🕐 06:00 · Grubbins: tend the soil";
+    else if (t < s + 4.2) clock.textContent = "🕐 09:00 · Grubbins: open the stall";
     else clock.textContent = "🕐 17:00 · Grubbins: fetch pond water";
-    // quest unlock: rubble dissolves
-    const unlock = seg(t, s + 3.6, s + 4.3);
+    const unlock = seg(t, s + 4.0, s + 4.7);
     cellEls.forEach((el) => {
       if (el._rubble) {
         el._rubble.style.opacity = 1 - unlock;
         el._rubble.style.transform = unlock > 0 && unlock < 1 ? `translate(${Math.sin(t * 60) * unlock * 3}px, 0)` : "";
       }
     });
-    const cp = backOut(seg(t, s + 4.2, s + 4.8));
-    chestEl.style.opacity = seg(t, s + 4.2, s + 4.5);
-    chestEl.style.transform = `scale(${cp})`;
-    const sp = backOut(seg(t, s + 4.4, s + 5.0));
-    shroomEl.style.opacity = seg(t, s + 4.4, s + 4.7);
-    shroomEl.style.transform = `scale(${sp})`;
-    $("edChip").style.opacity = seg(t, s + 4.3, s + 4.7);
-    $("edChip").style.transform = `translateY(${(1 - ease(seg(t, s + 4.3, s + 4.8))) * 18}px)`;
+    chestEl.style.opacity = seg(t, s + 4.6, s + 4.9);
+    chestEl.style.transform = `scale(${backOut(seg(t, s + 4.6, s + 5.2))})`;
+    shroomEl.style.opacity = seg(t, s + 4.8, s + 5.1);
+    shroomEl.style.transform = `scale(${backOut(seg(t, s + 4.8, s + 5.4))})`;
+    $("edChip").style.opacity = seg(t, s + 4.7, s + 5.1);
+    $("edChip").style.transform = `translateY(${(1 - ease(seg(t, s + 4.7, s + 5.2))) * 18}px)`;
+  }
+
+  /* Sec — security */
+  if (setScene("sSec", t, T.Sec) > 0) {
+    const s = T.Sec[0];
+    const roleIdx = t < s + 2.0 ? 0 : t < s + 3.3 ? 1 : t < s + 4.6 ? 2 : 3;
+    const role = ROLES[roleIdx];
+    ROLES.forEach((_, i) => $("role" + i).className = "role" + (i === roleIdx ? " on" : ""));
+    CHANNELS.forEach((c) => {
+      const [r, p] = role[c.id];
+      $(c.id + "_r").className = "pchip " + (r ? "ok" : "no");
+      $(c.id + "_p").className = "pchip " + (p ? "ok" : "no");
+      $("card_" + c.id).style.opacity = r ? 1 : 0.45;
+      $("card_" + c.id).style.filter = r ? "" : "saturate(0.5)";
+      const badge = $("badge_" + c.id);
+      if (c.id === "prod") {
+        badge.textContent = role.badge;
+        badge.style.color = role.badge === "PUBLIC" ? "var(--green)" : "var(--yellow)";
+      } else badge.textContent = "";
+    });
+    $("secNote").textContent = role.note;
+    $("secRoles").style.opacity = seg(t, s + 0.4, s + 0.9);
+    $("secCards").style.opacity = seg(t, s + 0.7, s + 1.2);
+    $("secNote").style.opacity = seg(t, s + 0.9, s + 1.4);
+  }
+
+  /* Wiki */
+  if (setScene("sWiki", t, T.Wiki) > 0) {
+    const s = T.Wiki[0];
+    const second = t > s + 2.9;
+    $("wTable").style.opacity = seg(t, s + 0.4, s + 0.9);
+    $("wTable").style.transform = `translateX(${(1 - ease(seg(t, s + 0.4, s + 1.0))) * -40}px)`;
+    $("wDetail").style.opacity = seg(t, s + 0.7, s + 1.2);
+    $("wr0").className = "trow" + (!second ? " on" : "");
+    $("wr1").className = "trow" + (second ? " on" : "");
+    $("wr2").className = "trow";
+    const swap = second ? seg(t, s + 2.9, s + 3.25) : 0;
+    $("ws0").style.opacity = (1 - swap) * seg(t, s + 0.8, s + 1.3);
+    $("ws1").style.opacity = swap;
+    // changelog rows cascade on whichever stack is visible
+    const stack = second ? $("ws1") : $("ws0");
+    const base = second ? s + 3.0 : s + 1.0;
+    [...stack.querySelectorAll(".clog")].forEach((el, i) => {
+      const p = ease(seg(t, base + 0.15 + i * 0.18, base + 0.5 + i * 0.18));
+      el.style.opacity = p;
+      el.style.transform = `translateY(${(1 - p) * 14}px)`;
+    });
   }
 
   /* F — outro */
   if (setScene("sF", t, T.F) > 0) {
     const s = T.F[0];
-    const p = seg(t, s + 0.9, s + 2.4);
-    const n = Math.floor(p * CLI_TEXT.length);
-    $("cliText").textContent = CLI_TEXT.slice(0, n);
+    $("outTag").style.opacity = seg(t, s + 0.8, s + 1.5);
+    const p = seg(t, s + 1.6, s + 3.0);
+    $("cliText").textContent = CLI_TEXT.slice(0, Math.floor(p * CLI_TEXT.length));
     $("cliCur").style.opacity = Math.sin(t * 6) > 0 ? 1 : 0;
-    $("url").style.opacity = seg(t, s + 2.6, s + 3.2);
-    $("url").style.transform = `translateY(${(1 - ease(seg(t, s + 2.6, s + 3.3))) * 16}px)`;
+    $("url").style.opacity = seg(t, s + 3.2, s + 3.8);
+    $("url").style.transform = `translateY(${(1 - ease(seg(t, s + 3.2, s + 3.9))) * 16}px) scale(${0.96 + 0.04 * backOut(seg(t, s + 3.2, s + 4.0))})`;
     $("chipRow").style.transform = `translateX(${-((t * 120) % ($("chipRow").scrollWidth / 2))}px)`;
     $("chips").style.opacity = seg(t, s + 0.5, s + 1.1);
   }
 };
 
-// preview mode: open scene.html?play in a browser
 if (location.search.includes("play")) {
   const t0 = performance.now();
   (function loop() {
-    window.seek(((performance.now() - t0) / 1000) % 30);
+    window.seek(((performance.now() - t0) / 1000) % 52);
     requestAnimationFrame(loop);
   })();
 } else {
