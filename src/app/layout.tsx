@@ -20,7 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Neo Compose — Build worlds, not spreadsheets",
   description:
-    "The game content platform for Unity: visual schemas, branching dialogue flows, typed C# codegen, cloud saves with realtime sync, localization, versioned releases, and an agent-friendly CLI.",
+    "The game content platform for Unity: visual schemas, branching dialogue flows, typed C# codegen, cloud saves with realtime sync, localization, versioned releases, a Figma-style level editor, and an agent-friendly CLI.",
 };
 
 export default function RootLayout({

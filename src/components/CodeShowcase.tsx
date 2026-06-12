@@ -164,14 +164,13 @@ export function CodeShowcase() {
           viewport={{ once: true, margin: "-80px" }}
         >
           <h2 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
-            Your content, <span className="text-gradient">compiled</span>.
-            <br />
-            Nothing sacrificed.
+            Generated C# that feels{" "}
+            <span className="text-gradient">hand-written</span>.
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-ink-dim">
-            Moving your schema into Neo Compose doesn&apos;t mean giving up
-            what makes C# great. The generated code feels native to Unity —
-            and stays byte-for-byte in sync with what you see in the UI.
+            Authoring your schema in a web app costs you nothing in code
+            quality. The output is native Unity C# — inheritance, bindings,
+            and all — kept byte-for-byte in sync with what you see in the UI.
           </p>
           <ul className="mt-6 space-y-3 text-ink-dim">
             {[

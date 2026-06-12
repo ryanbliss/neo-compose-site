@@ -1,10 +1,61 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { FlowGraph } from "./FlowGraph";
 
+/**
+ * Paired so every combination reads true — the two slots always
+ * swap together, like lego bricks that only click one way.
+ */
+const audiencePairs = [
+  { what: "narrative games", why: "choices matter" },
+  { what: "cozy sims", why: "friendships grow" },
+  { what: "RPGs", why: "quests branch" },
+  { what: "roguelikes", why: "lore runs deep" },
+  { what: "sandboxes", why: "the world remembers" },
+];
+
+function RotatingBrick({
+  text,
+  className,
+  delay = 0,
+}: {
+  text: string;
+  className: string;
+  delay?: number;
+}) {
+  return (
+    <span className="relative inline-flex h-[1.4em] items-center overflow-hidden align-bottom">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={text}
+          initial={{ y: "110%", opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: "-110%", opacity: 0 }}
+          transition={{ type: "spring", stiffness: 320, damping: 30, delay }}
+          className={`whitespace-nowrap font-semibold ${className}`}
+        >
+          {text}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
 export function Hero() {
+  const [pairIndex, setPairIndex] = useState(0);
+  const pair = audiencePairs[pairIndex];
+
+  useEffect(() => {
+    const timer = setInterval(
+      () => setPairIndex((current) => (current + 1) % audiencePairs.length),
+      3000,
+    );
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section
       id="top"
@@ -17,10 +68,17 @@ export function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm text-ink-dim"
+            className="glass inline-flex flex-wrap items-center gap-x-1.5 gap-y-0 rounded-full px-4 py-1.5 text-sm text-ink-dim"
           >
-            <Sparkles className="size-4 text-neon-yellow" />
-            For any game with narrative content — RPGs to roguelikes
+            <Sparkles className="size-4 shrink-0 text-neon-yellow" />
+            <span>For</span>
+            <RotatingBrick text={pair.what} className="text-ice" />
+            <span>where</span>
+            <RotatingBrick
+              text={pair.why}
+              className="text-neon-pink"
+              delay={0.12}
+            />
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -39,9 +97,8 @@ export function Hero() {
           >
             Neo Compose turns your game&apos;s data — schemas, branching
             dialogue, saves, levels, and translations — into one living
-            project that ships straight into Unity as typed C#. Cozy farming
-            sim or sprawling ARPG: author it on the web, sync it in realtime,
-            version it like code.
+            project that ships straight into Unity as typed C#. Author it on
+            the web, sync it in realtime, version it like code.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 24 }}

@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Axe, Layers, Map as MapIcon } from "lucide-react";
-import { tileArt, TreeSprite, type Tile } from "./level-editor-art";
+import { Axe, CalendarClock, Layers, Map as MapIcon } from "lucide-react";
+import { GoblinSprite, tileArt, TreeSprite, type Tile } from "./level-editor-art";
 
 type Tool = Tile | "tree" | "axe";
 
@@ -16,6 +16,12 @@ const GRID_W = 12;
 const GRID_H = 7;
 
 const tileTools = Object.keys(tileArt) as Tile[];
+
+const routine = [
+  { time: "06:00", icon: "🌱", label: "tend the soil", x: 2, y: 1 },
+  { time: "17:00", icon: "🪣", label: "fetch pond water", x: 8, y: 4 },
+  { time: "20:00", icon: "🏠", label: "head home", x: 0, y: 3 },
+];
 
 function at(x: number, y: number): number {
   return y * GRID_W + x;
@@ -68,15 +74,25 @@ export function LevelEditor() {
   const [tool, setTool] = useState<Tool>("soil");
   const [wood, setWood] = useState(0);
   const [lastWrite, setLastWrite] = useState<string | null>(null);
+  const [routineIndex, setRoutineIndex] = useState(0);
   const painting = useRef(false);
   const writeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const stop = routine[routineIndex];
 
   useEffect(() => {
-    const stop = () => {
+    const halt = () => {
       painting.current = false;
     };
-    window.addEventListener("pointerup", stop);
-    return () => window.removeEventListener("pointerup", stop);
+    window.addEventListener("pointerup", halt);
+    return () => window.removeEventListener("pointerup", halt);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(
+      () => setRoutineIndex((current) => (current + 1) % routine.length),
+      3600,
+    );
+    return () => clearInterval(timer);
   }, []);
 
   const treeCount = useMemo(
@@ -223,7 +239,7 @@ export function LevelEditor() {
               </div>
             </div>
             <div
-              className="mt-5 grid touch-none select-none gap-0 overflow-hidden rounded-xl border border-edge"
+              className="relative mt-5 grid touch-none select-none gap-0 overflow-hidden rounded-xl border border-edge"
               style={{ gridTemplateColumns: `repeat(${GRID_W}, minmax(0, 1fr))` }}
             >
               {cells.map((cell, index) => {
@@ -270,6 +286,33 @@ export function LevelEditor() {
                   </div>
                 );
               })}
+              <div
+                className="pointer-events-none absolute z-10 transition-all duration-[2000ms] ease-in-out"
+                style={{
+                  left: `${((stop.x + 0.5) / GRID_W) * 100}%`,
+                  top: `${((stop.y + 0.5) / GRID_H) * 100}%`,
+                  width: `${(1 / GRID_W) * 100}%`,
+                  transform: "translate(-50%, -58%)",
+                }}
+              >
+                <motion.div
+                  animate={{ y: [0, -2.5, 0] }}
+                  transition={{ duration: 0.55, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <GoblinSprite className="h-auto w-full drop-shadow-[0_2px_4px_rgb(0_0_0/0.55)]" />
+                </motion.div>
+              </div>
+              <AnimatePresence mode="popLayout">
+                <motion.p
+                  key={stop.time}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  className="glass pointer-events-none absolute left-2 top-2 z-10 rounded-lg px-2.5 py-1.5 font-mono text-xs text-ink"
+                >
+                  🕐 {stop.time} · Grubbins: {stop.label}
+                </motion.p>
+              </AnimatePresence>
             </div>
             <p className="mt-4 font-mono text-xs text-ink-dim">
               smart tiles · Extend Neighbor on — edges resolve themselves
@@ -309,6 +352,36 @@ export function LevelEditor() {
                   ▸ Collisions · auto from colliders
                 </li>
               </ul>
+            </div>
+            <div className="glass rounded-2xl p-5">
+              <p className="flex items-center gap-2 font-display text-sm font-bold text-ink-dim">
+                <CalendarClock className="size-4" /> Routine · Grubbins
+              </p>
+              <ul className="mt-3 space-y-1.5 font-mono text-xs">
+                {routine.map((entry, index) => (
+                  <li
+                    key={entry.time}
+                    className={`flex items-center gap-2 rounded-md px-3 py-1.5 transition-colors ${
+                      index === routineIndex
+                        ? "bg-blurple/20 text-ink"
+                        : "text-ink-dim"
+                    }`}
+                  >
+                    <span
+                      className={`size-1.5 rounded-full ${
+                        index === routineIndex
+                          ? "bg-neon-green animate-pulse-glow"
+                          : "bg-edge"
+                      }`}
+                    />
+                    {entry.time} {entry.icon} {entry.label}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-xs leading-relaxed text-ink-dim">
+                NPC routines are schedules on the clock — and every stop can
+                gate dialogue and quests through NeoScript.
+              </p>
             </div>
             <div className="glass grow rounded-2xl p-5 font-mono text-sm">
               <p className="flex items-center justify-between text-xs text-ink-dim">

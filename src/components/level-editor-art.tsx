@@ -133,6 +133,43 @@ export const tileArt: Record<Tile, { label: string; record: string; uri: string;
   stone: { label: "Flagstones", record: "StonePathTile", uri: stoneArt, base: "#262344" },
 };
 
+export function GoblinSprite({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      shapeRendering="crispEdges"
+      className={className}
+      aria-label="Grubbins the goblin"
+      role="img"
+    >
+      {/* ground shadow */}
+      <rect x="5" y="15" width="6" height="1" fill="#000000" opacity="0.35" />
+      {/* ears */}
+      <rect x="2" y="4" width="3" height="1" fill="#4f9e5d" />
+      <rect x="11" y="4" width="3" height="1" fill="#4f9e5d" />
+      <rect x="2" y="5" width="2" height="1" fill="#3d7d49" />
+      <rect x="12" y="5" width="2" height="1" fill="#3d7d49" />
+      {/* head */}
+      <rect x="5" y="2" width="6" height="5" fill="#57a85f" />
+      <rect x="5" y="2" width="6" height="1" fill="#6fcf7c" />
+      <rect x="5" y="6" width="6" height="1" fill="#3d7d49" />
+      {/* eyes */}
+      <rect x="6" y="4" width="1" height="1" fill="#ffd166" />
+      <rect x="9" y="4" width="1" height="1" fill="#ffd166" />
+      {/* tunic */}
+      <rect x="5" y="7" width="6" height="5" fill="#3a2b4e" />
+      <rect x="5" y="7" width="6" height="1" fill="#4a3863" />
+      <rect x="5" y="9" width="6" height="1" fill="#6c5ce7" opacity="0.85" />
+      {/* arms */}
+      <rect x="4" y="8" width="1" height="3" fill="#4f9e5d" />
+      <rect x="11" y="8" width="1" height="3" fill="#4f9e5d" />
+      {/* legs */}
+      <rect x="6" y="12" width="1" height="3" fill="#2a2440" />
+      <rect x="9" y="12" width="1" height="3" fill="#2a2440" />
+    </svg>
+  );
+}
+
 export function TreeSprite({ className }: { className?: string }) {
   return (
     <svg
