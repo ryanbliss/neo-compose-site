@@ -5,89 +5,103 @@ import { AnimatePresence, motion } from "motion/react";
 import { RotateCcw } from "lucide-react";
 
 type SaveState = {
-  favColor: string | null;
-  stormCorn: number;
-  metKeeper: boolean;
+  gold: number;
+  ratFriendship: number;
+  hasSword: boolean;
+  swordDiscount: boolean;
 };
 
 interface DialogueNode {
   speaker: string;
   text: (save: SaveState) => string;
   choices?: Array<{
-    label: string;
+    label: string | ((save: SaveState) => string);
     next: string;
     apply?: (save: SaveState) => SaveState;
     badge?: string;
+    hidden?: (save: SaveState) => boolean;
   }>;
   next?: string;
 }
 
 const script: Record<string, DialogueNode> = {
   start: {
-    speaker: "Outpost Keeper",
+    speaker: "Grubbins",
     text: () =>
-      "You came back. Good. Close the door — Neptune's storms chew up dirtsider ships for breakfast.",
-    next: "favColor",
+      "Welcome back, adventurer! Today only: one slightly cursed sword. Barely cursed. Ten percent cursed, tops.",
+    next: "pitch",
   },
-  favColor: {
-    speaker: "Outpost Keeper",
-    text: () => "Before I trust you with the vault… what is your favorite color?",
+  pitch: {
+    speaker: "Grubbins",
+    text: (save) =>
+      save.swordDiscount
+        ? "Thirty gold. The rat vouched for you, and I don't argue with the rat."
+        : "Fifty gold and the whispering is free.",
     choices: [
       {
-        label: "Blue",
-        next: "blue",
-        apply: (save) => ({ ...save, favColor: "Blue", metKeeper: true }),
-        badge: "save.FavColor = Blue",
+        label: (save) =>
+          save.swordDiscount ? "Buy it (30 gold)" : "Buy it (50 gold)",
+        next: "buy",
+        apply: (save) => ({
+          ...save,
+          gold: save.gold - (save.swordDiscount ? 30 : 50),
+          hasSword: true,
+        }),
+        badge: "save.Gold -= price · save.Items.Add(CursedSword)",
       },
       {
-        label: "Pink",
-        next: "pink",
-        apply: (save) => ({ ...save, favColor: "Pink", metKeeper: true }),
-        badge: "save.FavColor = Pink",
+        label: "Pet the shop rat 🐀",
+        next: "rat",
+        hidden: (save) => save.swordDiscount,
+        apply: (save) => ({
+          ...save,
+          ratFriendship: save.ratFriendship + 1,
+          swordDiscount: true,
+        }),
+        badge: "save.RatFriendship += 1",
       },
       {
-        label: "Green",
-        next: "green",
-        apply: (save) => ({ ...save, favColor: "Green", metKeeper: true }),
-        badge: "save.FavColor = Green",
+        label: "Ask about the curse",
+        next: "curse",
+        hidden: (save) => save.swordDiscount,
       },
     ],
   },
-  blue: {
-    speaker: "Outpost Keeper",
-    text: () => "Blue. Like the home you left behind. I'm blue too — if I were green I would die.",
-    next: "reward",
+  rat: {
+    speaker: "Grubbins",
+    text: () =>
+      "Bartholomew likes you! He bites everyone. EVERYONE. Tell you what — discount. Don't make it weird.",
+    next: "pitch",
   },
-  pink: {
-    speaker: "Outpost Keeper",
-    text: () => "Pink?! Ha! If I were pink I would PIE.",
-    next: "reward",
+  curse: {
+    speaker: "Grubbins",
+    text: () =>
+      "Define 'curse'. It hums show tunes at night and points at your enemies. Mostly your enemies.",
+    next: "pitch",
   },
-  green: {
-    speaker: "Outpost Keeper",
-    text: () => "Green — the one color this planet has never seen. You'll fit right in.",
-    next: "reward",
-  },
-  reward: {
-    speaker: "Outpost Keeper",
-    text: () => "Here. Storm Corn from the hydro bay. Don't ask how it's grown.",
-    choices: [
-      {
-        label: "Take the Storm Corn 🌽",
-        next: "end",
-        apply: (save) => ({ ...save, stormCorn: save.stormCorn + 1 }),
-        badge: "save.Items.Add(StormCorn)",
-      },
-    ],
+  buy: {
+    speaker: "Grubbins",
+    text: () =>
+      "Pleasure doing business! The sword whispers. That's normal. Probably normal.",
+    next: "end",
   },
   end: {
-    speaker: "Outpost Keeper",
+    speaker: "Grubbins",
     text: (save) =>
-      `Next time you visit, I'll remember you like ${save.favColor ?? "…nothing"}. That's the point — this conversation lives in your save file.`,
+      `Come back when something falls off! ${
+        save.ratFriendship > 0
+          ? "Bartholomew will remember you — it's in your save file now."
+          : "Bartholomew will remember that you didn't pet him. It's in your save file now."
+      }`,
   },
 };
 
-const initialSave: SaveState = { favColor: null, stormCorn: 0, metKeeper: false };
+const initialSave: SaveState = {
+  gold: 80,
+  ratFriendship: 0,
+  hasSword: false,
+  swordDiscount: false,
+};
 
 function useTypewriter(text: string): string {
   const [typed, setTyped] = useState({ text, count: 0 });
@@ -124,15 +138,19 @@ export function DialogueDemo() {
       JSON.stringify(
         {
           values: {
-            FavColor: save.favColor,
-            MetKeeper: save.metKeeper,
-            Items: save.stormCorn > 0 ? [`StormCorn x${save.stormCorn}`] : [],
+            Gold: save.gold,
+            RatFriendship: save.ratFriendship,
+            Items: save.hasSword ? ["CursedSword"] : [],
           },
         },
         null,
         2,
       ),
     [save],
+  );
+
+  const visibleChoices = node.choices?.filter(
+    (choice) => !choice.hidden?.(save),
   );
 
   function choose(choice: NonNullable<DialogueNode["choices"]>[number]) {
@@ -182,11 +200,13 @@ export function DialogueDemo() {
             <div className="flex items-center justify-between border-b border-edge pb-4">
               <div className="flex items-center gap-3">
                 <span className="grid size-10 place-items-center rounded-full bg-blurple/25 text-lg">
-                  🪐
+                  👺
                 </span>
                 <div>
                   <p className="font-display font-bold">{node.speaker}</p>
-                  <p className="text-xs text-ink-dim">Outpost Caelus Anchorpoint · Uranus</p>
+                  <p className="text-xs text-ink-dim">
+                    The Rusty Gobl-Inn · Discount Curses &amp; Sundries
+                  </p>
                 </div>
               </div>
               <button
@@ -202,21 +222,27 @@ export function DialogueDemo() {
             </p>
             <div className="mt-auto flex flex-wrap gap-3">
               <AnimatePresence mode="popLayout">
-                {done && node.choices?.map((choice) => (
-                  <motion.button
-                    key={choice.label}
-                    layout
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.96 }}
-                    onClick={() => choose(choice)}
-                    className="rounded-xl border border-blurple/60 bg-blurple/15 px-5 py-2.5 font-semibold text-blurple-bright transition-colors hover:bg-blurple/30"
-                  >
-                    {choice.label}
-                  </motion.button>
-                ))}
+                {done && visibleChoices?.map((choice) => {
+                  const label =
+                    typeof choice.label === "function"
+                      ? choice.label(save)
+                      : choice.label;
+                  return (
+                    <motion.button
+                      key={label}
+                      layout
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => choose(choice)}
+                      className="rounded-xl border border-blurple/60 bg-blurple/15 px-5 py-2.5 font-semibold text-blurple-bright transition-colors hover:bg-blurple/30"
+                    >
+                      {label}
+                    </motion.button>
+                  );
+                })}
                 {done && !node.choices && node.next && (
                   <motion.button
                     key="continue"

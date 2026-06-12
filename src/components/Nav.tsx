@@ -1,13 +1,14 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Gamepad2 } from "lucide-react";
+import { Logo } from "./Logo";
 
 const links = [
   { href: "#features", label: "Features" },
   { href: "#play", label: "Try a dialogue" },
   { href: "#code", label: "Code" },
-  { href: "#sync", label: "Live sync" },
+  { href: "#agents", label: "Agents" },
+  { href: "#security", label: "Security" },
 ];
 
 export function Nav() {
@@ -20,10 +21,7 @@ export function Nav() {
     >
       <nav className="glass mx-auto mt-4 flex w-[min(72rem,calc(100%-2rem))] items-center justify-between rounded-2xl px-5 py-3">
         <a href="#top" className="flex items-center gap-2.5">
-          <span className="relative grid size-9 place-items-center rounded-xl bg-blurple/20">
-            <Gamepad2 className="size-5 text-blurple-bright" />
-            <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-neon-green animate-pulse-glow" />
-          </span>
+          <Logo size={30} />
           <span className="font-display text-lg font-bold tracking-tight">
             neo<span className="text-blurple-bright">compose</span>
           </span>
@@ -40,7 +38,7 @@ export function Nav() {
           ))}
         </div>
         <a
-          href="#cta"
+          href="https://app.neocompose.com"
           className="rounded-xl bg-blurple px-4 py-2 text-sm font-semibold text-white shadow-[0_0_24px_rgb(108_92_231/0.5)] transition-transform hover:scale-105 active:scale-95"
         >
           Start building

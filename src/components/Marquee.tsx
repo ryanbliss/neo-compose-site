@@ -8,6 +8,8 @@ const chips = [
   "🏷 Semver releases",
   "📖 Game wiki",
   "🤖 Agent-friendly CLI",
+  "🛡 Role-based policies",
+  "🚀 Release channels",
   "🧩 Built for modding",
 ];
 

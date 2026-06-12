@@ -17,19 +17,39 @@ const str = "text-neon-yellow";
 const fn = "text-blurple-bright";
 const comment = "text-ink-dim";
 const plain = "text-ink";
+const ok = "text-neon-green";
 
 const csharpLines: Line[] = [
-  [{ text: "// Generated from your project — fully typed", color: comment }],
+  [{ text: "// Generated from your project — reads like hand-written Unity code", color: comment }],
+  [
+    { text: "public sealed class", color: keyword },
+    { text: " CursedSword", color: type },
+    { text: " : ", color: plain },
+    { text: "Weapon", color: type },
+    { text: "   ", color: plain },
+    { text: "// your abstract types, real inheritance", color: comment },
+  ],
+  [
+    { text: "{", color: plain },
+  ],
+  [
+    { text: "    public float", color: keyword },
+    { text: " CurseLevel => ", color: plain },
+    { text: "value", color: plain },
+    { text: ".CurseLevel; ", color: plain },
+    { text: "// 0.1f, tops", color: comment },
+  ],
+  [{ text: "}", color: plain }],
+  [],
   [
     { text: "var", color: keyword },
     { text: " neo = ", color: plain },
-    { text: "HelloWorldNeo", color: type },
+    { text: "RustyGoblInnNeo", color: type },
     { text: ".Instance;", color: plain },
   ],
-  [],
   [
     { text: "if", color: keyword },
-    { text: " (neo.Dialogues.NPC.Talk.", color: plain },
+    { text: " (neo.Dialogues.Shop.Grubbins.", color: plain },
     { text: "TryTrigger", color: fn },
     { text: "(npc, ", color: plain },
     { text: "out var", color: keyword },
@@ -41,24 +61,16 @@ const csharpLines: Line[] = [
     { text: "(line);", color: plain },
   ],
   [],
-  [{ text: "// Typed change subscriptions", color: comment }],
   [
     { text: "neo.Save.", color: plain },
     { text: "OnChanged", color: fn },
-    { text: "(Save.Fields.StormCorn,", color: plain },
+    { text: "(Save.Fields.RatFriendship,", color: plain },
   ],
   [
-    { text: "    corn => hud.", color: plain },
-    { text: "SetCornCount", color: fn },
-    { text: "(corn));", color: plain },
-  ],
-  [],
-  [
-    { text: "await", color: keyword },
-    { text: " neo.Client.", color: plain },
-    { text: "CommitAsync", color: fn },
-    { text: "(); ", color: plain },
-    { text: "// cloud save ☁️", color: comment },
+    { text: "    rat => bartholomew.", color: plain },
+    { text: "Squeak", color: fn },
+    { text: "());      ", color: plain },
+    { text: "// typed, no string keys", color: comment },
   ],
 ];
 
@@ -67,29 +79,23 @@ const cliLines: Line[] = [
     { text: "$ ", color: comment },
     { text: "neo pull", color: plain },
   ],
-  [
-    { text: "  ✓ schema synced → neo/Schema/*.cs", color: "text-neon-green" },
-  ],
+  [{ text: "  ✓ schema synced → neo/Schema/*.cs", color: ok }],
   [],
   [
     { text: "$ ", color: comment },
-    { text: "neo branch create dlc-frost-moon", color: plain },
+    { text: "neo branch create dlc-rat-king", color: plain },
   ],
   [
     { text: "$ ", color: comment },
     { text: "neo push", color: plain },
   ],
-  [
-    { text: "  ✓ 12 records committed (minor bump)", color: "text-neon-green" },
-  ],
+  [{ text: "  ✓ 12 records committed (minor bump)", color: ok }],
   [],
   [
     { text: "$ ", color: comment },
-    { text: "neo merge dlc-frost-moon --into main", color: plain },
+    { text: "neo merge dlc-rat-king --into main", color: plain },
   ],
-  [
-    { text: "  ✓ field-level merge — 0 conflicts", color: "text-neon-green" },
-  ],
+  [{ text: "  ✓ field-level merge — 0 conflicts", color: ok }],
   [],
   [{ text: "# Your repo, your review flow, your agents.", color: comment }],
 ];
@@ -98,36 +104,39 @@ const flowLines: Line[] = [
   [{ text: "// Smart triggers, authored visually", color: comment }],
   [
     { text: "group", color: keyword },
-    { text: " NPC.Talk ", color: plain },
+    { text: " Shop.Grubbins ", color: plain },
     { text: "lookup", color: keyword },
     { text: "(Assets.NPCs)", color: plain },
   ],
   [
     { text: "  when", color: keyword },
-    { text: " npc.DayTalkCount < Assets.Flags.MaxTalks", color: plain },
+    { text: " save.Gold >= Assets.Prices.CursedSword", color: plain },
   ],
   [],
   [
     { text: "dialogue", color: keyword },
     { text: " ", color: plain },
-    { text: "\"Storm warning\"", color: str },
+    { text: "\"Sword sales pitch\"", color: str },
     { text: " priority ", color: plain },
     { text: "High", color: type },
   ],
   [
-    { text: "  when", color: keyword },
-    { text: " save.Weather == Weather.", color: plain },
-    { text: "GyreStorm", color: type },
+    { text: "dialogue", color: keyword },
+    { text: " ", color: plain },
+    { text: "\"Rat gossip\"", color: str },
+    { text: " priority ", color: plain },
+    { text: "Low", color: type },
   ],
   [],
-  [{ text: "// Ties break by priority, then random —", color: comment }],
+  [{ text: "// Both eligible? The pitch wins on priority.", color: comment }],
+  [{ text: "// Equal priority would draw at random —", color: comment }],
   [{ text: "// fresh lines every playthrough.", color: comment }],
 ];
 
 const tabs = [
-  { id: "csharp", label: "Unity C#", lines: csharpLines, raw: "var neo = HelloWorldNeo.Instance;" },
-  { id: "cli", label: "neo CLI", lines: cliLines, raw: "neo pull" },
-  { id: "flow", label: "NeoScript", lines: flowLines, raw: "group NPC.Talk lookup(Assets.NPCs)" },
+  { id: "csharp", label: "Unity C#", lines: csharpLines },
+  { id: "cli", label: "neo CLI", lines: cliLines },
+  { id: "flow", label: "NeoScript", lines: flowLines },
 ];
 
 export function CodeShowcase() {
@@ -156,18 +165,20 @@ export function CodeShowcase() {
         >
           <h2 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
             Your content, <span className="text-gradient">compiled</span>.
+            <br />
+            Nothing sacrificed.
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-ink-dim">
-            Every schema, dialogue, and string you author becomes typed C# and
-            JSON your game consumes directly. No stringly-typed lookups, no
-            drift between design and code — if it compiles, it matches the
-            project.
+            Moving your schema into Neo Compose doesn&apos;t mean giving up
+            what makes C# great. The generated code feels native to Unity —
+            and stays byte-for-byte in sync with what you see in the UI.
           </p>
           <ul className="mt-6 space-y-3 text-ink-dim">
             {[
-              "Generated SDK client with autocomplete for your whole data model",
-              "NeoScript conditions evaluated at runtime, authored in UI",
-              "A CLI that round-trips the project as reviewable C# files",
+              "Inheritance and abstract custom types generate real C# class hierarchies",
+              "Bind NeoScript functions to your own native C# methods",
+              "Typed change subscriptions — no string keys, no reflection in your hot path",
+              "Autocomplete across your entire data model; if it compiles, it matches the project",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3">
                 <Check className="mt-1 size-4 shrink-0 text-neon-green" />
@@ -218,12 +229,12 @@ export function CodeShowcase() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15 }}
-              className="min-h-[22rem] overflow-x-auto p-6 font-mono text-sm leading-7"
+              className="min-h-[24rem] overflow-x-auto p-6 font-mono text-sm leading-7"
             >
               {active.lines.map((line, lineIndex) => (
                 <div key={lineIndex}>
                   {line.length === 0
-                    ? " "
+                    ? " "
                     : line.map((token, tokenIndex) => (
                         <span key={tokenIndex} className={token.color}>
                           {token.text}

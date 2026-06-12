@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ArrowRight, Gamepad2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Logo } from "./Logo";
 
 export function Footer() {
   return (
@@ -24,21 +25,21 @@ export function Footer() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a
-              href="#top"
+              href="https://app.neocompose.com"
               className="group flex items-center gap-2 rounded-xl bg-blurple px-7 py-3.5 font-semibold text-white shadow-[0_0_32px_rgb(108_92_231/0.55)] transition-transform hover:scale-105 active:scale-95"
             >
               Create your first project
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </a>
             <code className="glass rounded-xl px-5 py-3.5 font-mono text-sm text-ink-dim">
-              <span className="text-neon-green">$</span> npx neo-compose init
+              <span className="text-neon-green">$</span> npx @neocompose/cli init
             </code>
           </div>
         </motion.div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-edge pt-8 text-sm text-ink-dim md:flex-row">
-          <p className="flex items-center gap-2">
-            <Gamepad2 className="size-4 text-blurple-bright" />
+          <p className="flex items-center gap-2.5">
+            <Logo size={22} />
             <span className="font-display font-bold text-ink">
               neo<span className="text-blurple-bright">compose</span>
             </span>

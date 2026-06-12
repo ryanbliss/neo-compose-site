@@ -49,7 +49,7 @@ export function Hero() {
             className="mt-8 flex flex-wrap items-center gap-4"
           >
             <a
-              href="#cta"
+              href="https://app.neocompose.com"
               className="group flex items-center gap-2 rounded-xl bg-blurple px-6 py-3 font-semibold text-white shadow-[0_0_32px_rgb(108_92_231/0.55)] transition-transform hover:scale-105 active:scale-95"
             >
               Start your project
@@ -68,7 +68,7 @@ export function Hero() {
             transition={{ delay: 0.6 }}
             className="mt-6 font-mono text-sm text-ink-dim"
           >
-            <span className="text-neon-green">$</span> npx neo-compose init
+            <span className="text-neon-green">$</span> npx @neocompose/cli init
           </motion.p>
         </div>
         <div className="relative shrink-0">

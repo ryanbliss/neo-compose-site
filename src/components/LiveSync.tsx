@@ -4,11 +4,17 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Globe, MonitorPlay, Zap } from "lucide-react";
 
-const planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"];
+const biomes = [
+  { name: "Tavern", emoji: "🍺" },
+  { name: "Swamp", emoji: "🐸" },
+  { name: "Crypt", emoji: "💀" },
+  { name: "Rat Tunnels", emoji: "🐀" },
+];
 
 export function LiveSync() {
   const [hp, setHp] = useState(72);
-  const [planetIndex, setPlanetIndex] = useState(6);
+  const [biomeIndex, setBiomeIndex] = useState(0);
+  const biome = biomes[biomeIndex];
 
   return (
     <section id="sync" className="relative py-24">
@@ -63,15 +69,15 @@ export function LiveSync() {
               </label>
               <label className="block">
                 <span className="flex justify-between font-mono text-sm">
-                  <span className="text-ink-dim">save.World (enum Planet)</span>
-                  <span className="text-ice">{planets[planetIndex]}</span>
+                  <span className="text-ink-dim">save.Biome (enum Biome)</span>
+                  <span className="text-ice">{biome.name}</span>
                 </span>
                 <input
                   type="range"
                   min={0}
-                  max={planets.length - 1}
-                  value={planetIndex}
-                  onChange={(event) => setPlanetIndex(Number(event.target.value))}
+                  max={biomes.length - 1}
+                  value={biomeIndex}
+                  onChange={(event) => setBiomeIndex(Number(event.target.value))}
                   className="mt-2 w-full accent-[var(--color-neon-pink)]"
                 />
               </label>
@@ -98,20 +104,18 @@ export function LiveSync() {
             <div className="mt-6 rounded-xl bg-void/70 p-5">
               <div className="flex items-center gap-3">
                 <motion.span
-                  key={planetIndex}
+                  key={biomeIndex}
                   initial={{ scale: 0.5, rotate: -30 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", damping: 10 }}
                   className="text-4xl"
                 >
-                  {["☿️", "♀️", "🌍", "🔴", "🟠", "🪐", "🌀", "🔵"][planetIndex]}
+                  {biome.emoji}
                 </motion.span>
                 <div>
-                  <p className="font-display text-lg font-bold">
-                    {planets[planetIndex]}
-                  </p>
+                  <p className="font-display text-lg font-bold">{biome.name}</p>
                   <p className="font-mono text-xs text-ink-dim">
-                    Outpost wandering-otter-619
+                    wandering-otter-619 · The Rusty Gobl-Inn
                   </p>
                 </div>
               </div>
@@ -135,7 +139,7 @@ export function LiveSync() {
                 </div>
               </div>
               <motion.p
-                key={`${hp}-${planetIndex}`}
+                key={`${hp}-${biomeIndex}`}
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0.4 }}
                 transition={{ duration: 1.4 }}
