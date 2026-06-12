@@ -133,6 +133,138 @@ export const tileArt: Record<Tile, { label: string; record: string; uri: string;
   stone: { label: "Flagstones", record: "StonePathTile", uri: stoneArt, base: "#262344" },
 };
 
+export const rubbleArt = {
+  base: "#2a2438",
+  uri: svgUri(
+    [
+      px(0, 0, "#2a2438", 16, 16),
+      // boulders
+      px(1, 1, "#3a3352", 6, 5),
+      px(2, 0, "#3a3352", 4, 1),
+      px(9, 2, "#454063", 6, 5),
+      px(10, 1, "#454063", 4, 1),
+      px(3, 8, "#454063", 5, 5),
+      px(10, 9, "#3a3352", 5, 5),
+      px(0, 10, "#332d4a", 3, 4),
+      // facets + cracks
+      px(2, 2, "#565186", 2, 1),
+      px(10, 3, "#5d588f", 2, 1),
+      px(4, 9, "#565186", 2, 1),
+      px(11, 10, "#565186", 2, 1),
+      px(5, 4, "#1c1830", 2, 1),
+      px(12, 5, "#1c1830", 2, 1),
+      px(6, 11, "#1c1830", 1, 2),
+      px(1, 13, "#1c1830", 2, 1),
+      // ground shadow
+      px(1, 6, "#171326", 6, 1),
+      px(9, 7, "#171326", 6, 1),
+      px(3, 13, "#171326", 5, 1),
+      px(10, 14, "#171326", 5, 1),
+    ].join(""),
+  ),
+};
+
+export function StallSprite({
+  open,
+  className,
+}: {
+  open: boolean;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      shapeRendering="crispEdges"
+      className={className}
+      aria-label={open ? "Market stall, open" : "Market stall, closed"}
+      role="img"
+    >
+      {open && <circle cx="13" cy="7" r="4" fill="#ffd166" opacity="0.18" />}
+      {/* ground shadow */}
+      <rect x="2" y="14" width="12" height="1" fill="#000000" opacity="0.35" />
+      {/* posts */}
+      <rect x="2" y="5" width="1" height="9" fill="#4a3626" />
+      <rect x="13" y="5" width="1" height="9" fill="#4a3626" />
+      {/* awning — striped, scalloped */}
+      <rect x="1" y="1" width="14" height="1" fill="#4a3863" />
+      <rect x="1" y="2" width="14" height="3" fill="#332d52" />
+      <rect x="2" y="2" width="2" height="3" fill="#6c5ce7" />
+      <rect x="6" y="2" width="2" height="3" fill="#6c5ce7" />
+      <rect x="10" y="2" width="2" height="3" fill="#6c5ce7" />
+      <rect x="2" y="5" width="2" height="1" fill="#6c5ce7" />
+      <rect x="6" y="5" width="2" height="1" fill="#332d52" />
+      <rect x="10" y="5" width="2" height="1" fill="#6c5ce7" />
+      {/* counter */}
+      <rect x="3" y="9" width="10" height="1" fill="#6b4f3a" />
+      <rect x="3" y="10" width="10" height="4" fill="#5a4330" />
+      <rect x="3" y="12" width="10" height="1" fill="#4a3626" />
+      {/* wares (visible when open) or shutter */}
+      {open ? (
+        <>
+          <rect x="5" y="7" width="2" height="2" fill="#ff4d9d" />
+          <rect x="8" y="7" width="2" height="2" fill="#3ddc84" />
+          <rect x="12" y="6" width="1" height="2" fill="#ffd166" />
+        </>
+      ) : (
+        <rect x="4" y="6" width="8" height="3" fill="#1c1830" />
+      )}
+    </svg>
+  );
+}
+
+export function ChestSprite({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      shapeRendering="crispEdges"
+      className={className}
+      aria-label="Treasure chest"
+      role="img"
+    >
+      <circle cx="8" cy="9" r="6" fill="#ffd166" opacity="0.14" />
+      <rect x="3" y="14" width="10" height="1" fill="#000000" opacity="0.35" />
+      {/* lid */}
+      <rect x="3" y="5" width="10" height="3" fill="#7d5832" />
+      <rect x="3" y="5" width="10" height="1" fill="#946a3d" />
+      {/* body */}
+      <rect x="3" y="8" width="10" height="6" fill="#6b4a2a" />
+      <rect x="3" y="13" width="10" height="1" fill="#503620" />
+      {/* metal bands */}
+      <rect x="4" y="5" width="1" height="9" fill="#8f6a3e" />
+      <rect x="11" y="5" width="1" height="9" fill="#8f6a3e" />
+      {/* clasp */}
+      <rect x="7" y="7" width="2" height="3" fill="#ffd166" />
+      <rect x="7" y="9" width="2" height="1" fill="#c79a3e" />
+    </svg>
+  );
+}
+
+export function ShroomSprite({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      shapeRendering="crispEdges"
+      className={className}
+      aria-label="Glowing mushroom"
+      role="img"
+    >
+      <circle cx="8" cy="8" r="5.5" fill="#ff4d9d" opacity="0.16" />
+      <rect x="5" y="15" width="6" height="1" fill="#000000" opacity="0.3" />
+      {/* stem */}
+      <rect x="7" y="10" width="2" height="5" fill="#cfc4e8" />
+      <rect x="7" y="10" width="1" height="5" fill="#e8e6f5" />
+      {/* cap */}
+      <rect x="4" y="7" width="8" height="3" fill="#ff4d9d" />
+      <rect x="5" y="5" width="6" height="2" fill="#ff4d9d" />
+      <rect x="6" y="4" width="4" height="1" fill="#ff6fb1" />
+      {/* spots */}
+      <rect x="6" y="6" width="1" height="1" fill="#ffd166" />
+      <rect x="9" y="8" width="1" height="1" fill="#ffd166" />
+      <rect x="5" y="8" width="1" height="1" fill="#ffb3d4" />
+    </svg>
+  );
+}
+
 export function GoblinSprite({ className }: { className?: string }) {
   return (
     <svg

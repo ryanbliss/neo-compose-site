@@ -2,26 +2,42 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Axe, CalendarClock, Layers, Map as MapIcon } from "lucide-react";
-import { GoblinSprite, tileArt, TreeSprite, type Tile } from "./level-editor-art";
+import { Axe, CalendarClock, Layers, Map as MapIcon, Swords } from "lucide-react";
+import {
+  ChestSprite,
+  GoblinSprite,
+  rubbleArt,
+  ShroomSprite,
+  StallSprite,
+  tileArt,
+  TreeSprite,
+  type Tile,
+} from "./level-editor-art";
 
 type Tool = Tile | "tree" | "axe";
 
 interface Cell {
   tile: Tile;
   tree: boolean;
+  rubble: boolean;
 }
 
 const GRID_W = 12;
 const GRID_H = 7;
+const QUEST_WOOD = 3;
 
 const tileTools = Object.keys(tileArt) as Tile[];
 
 const routine = [
-  { time: "06:00", icon: "🌱", label: "tend the soil", x: 2, y: 1 },
-  { time: "17:00", icon: "🪣", label: "fetch pond water", x: 8, y: 4 },
-  { time: "20:00", icon: "🏠", label: "head home", x: 0, y: 3 },
+  { time: "06:00", icon: "🌱", label: "tend the soil", x: 2, y: 1, shopOpen: false },
+  { time: "09:00", icon: "🪧", label: "open the stall", x: 4, y: 2, shopOpen: true },
+  { time: "17:00", icon: "🪣", label: "fetch pond water", x: 8, y: 4, shopOpen: false },
+  { time: "20:00", icon: "🏠", label: "head home", x: 0, y: 3, shopOpen: false },
 ];
+
+const STALL = { x: 5, y: 2 };
+const CHEST = { x: 11, y: 1 };
+const SHROOM = { x: 10, y: 2 };
 
 function at(x: number, y: number): number {
   return y * GRID_W + x;
@@ -31,6 +47,7 @@ function initialCells(): Cell[] {
   const cells: Cell[] = Array.from({ length: GRID_W * GRID_H }, () => ({
     tile: "grass" as Tile,
     tree: false,
+    rubble: false,
   }));
   // flagstone path winding in from the left
   for (const [x, y] of [
@@ -43,28 +60,35 @@ function initialCells(): Cell[] {
     [5, 4],
     [6, 4],
   ] as const) {
-    cells[at(x, y)] = { tile: "stone", tree: false };
+    cells[at(x, y)] = { tile: "stone", tree: false, rubble: false };
   }
   // tilled soil patch, top-left
   for (let y = 0; y <= 1; y++) {
     for (let x = 1; x <= 3; x++) {
-      cells[at(x, y)] = { tile: "soil", tree: false };
+      cells[at(x, y)] = { tile: "soil", tree: false, rubble: false };
     }
   }
   // pond, bottom-right
   for (let y = 4; y <= 6; y++) {
     for (let x = 9; x <= 11; x++) {
-      cells[at(x, y)] = { tile: "water", tree: false };
+      cells[at(x, y)] = { tile: "water", tree: false, rubble: false };
     }
   }
-  cells[at(8, 5)] = { tile: "water", tree: false };
+  cells[at(8, 5)] = { tile: "water", tree: false, rubble: false };
+  // rubble sealing off the north-east glade
+  for (let y = 0; y <= 2; y++) {
+    for (let x = 10; x <= 11; x++) {
+      cells[at(x, y)] = { tile: "grass", tree: false, rubble: true };
+    }
+  }
+  cells[at(9, 0)] = { tile: "grass", tree: false, rubble: true };
   // oaks
   for (const [x, y] of [
     [6, 1],
-    [9, 2],
+    [8, 2],
     [2, 5],
   ] as const) {
-    cells[at(x, y)] = { tile: "grass", tree: true };
+    cells[at(x, y)] = { tile: "grass", tree: true, rubble: false };
   }
   return cells;
 }
@@ -73,6 +97,7 @@ export function LevelEditor() {
   const [cells, setCells] = useState<Cell[]>(initialCells);
   const [tool, setTool] = useState<Tool>("soil");
   const [wood, setWood] = useState(0);
+  const [questDone, setQuestDone] = useState(false);
   const [lastWrite, setLastWrite] = useState<string | null>(null);
   const [routineIndex, setRoutineIndex] = useState(0);
   const painting = useRef(false);
@@ -90,7 +115,7 @@ export function LevelEditor() {
   useEffect(() => {
     const timer = setInterval(
       () => setRoutineIndex((current) => (current + 1) % routine.length),
-      3600,
+      3400,
     );
     return () => clearInterval(timer);
   }, []);
@@ -103,11 +128,15 @@ export function LevelEditor() {
   function flashWrite(message: string) {
     setLastWrite(message);
     if (writeTimer.current) clearTimeout(writeTimer.current);
-    writeTimer.current = setTimeout(() => setLastWrite(null), 2000);
+    writeTimer.current = setTimeout(() => setLastWrite(null), 2200);
   }
 
   function applyTool(index: number) {
     const cell = cells[index];
+    if (cell.rubble) {
+      flashWrite("⛔ quest-locked — turn in Firewood to clear");
+      return;
+    }
     if (tool === "tree") {
       if (cell.tree || cell.tile === "water") return;
       setCells((current) =>
@@ -131,7 +160,7 @@ export function LevelEditor() {
     setCells((current) =>
       current.map((entry, i) =>
         i === index
-          ? { tile: tool, tree: tool === "water" ? false : entry.tree }
+          ? { ...entry, tile: tool, tree: tool === "water" ? false : entry.tree }
           : entry,
       ),
     );
@@ -140,13 +169,28 @@ export function LevelEditor() {
     flashWrite(`level.Tiles[${x},${y}] = ${tileArt[tool].record}`);
   }
 
+  function turnInQuest() {
+    if (questDone || wood < QUEST_WOOD) return;
+    setWood((current) => current - QUEST_WOOD);
+    setQuestDone(true);
+    setCells((current) => current.map((entry) => ({ ...entry, rubble: false })));
+    flashWrite("save.Quests.Firewood = Done → glade unlocked");
+  }
+
   function sameTile(x: number, y: number, tile: Tile): boolean {
     if (x < 0 || y < 0 || x >= GRID_W || y >= GRID_H) return false;
     return cells[y * GRID_W + x].tile === tile;
   }
 
   const saveJson = JSON.stringify(
-    { values: { Wood: wood, OakTrees: treeCount } },
+    {
+      values: {
+        Wood: wood,
+        OakTrees: treeCount,
+        ShopOpen: stop.shopOpen,
+        Quests: { Firewood: questDone ? "Done" : "Active" },
+      },
+    },
     null,
     2,
   );
@@ -169,14 +213,12 @@ export function LevelEditor() {
           </h2>
           <p className="mt-4 text-lg text-ink-dim">
             A collaborative level editor with pages, layers, smart tiles, and
-            object palettes — where any tile can be static art{" "}
-            <em>or</em>{" "}
-            live save data. Tend the Gobl-Inn&apos;s night garden below, then
-            grab the axe.
+            object palettes. Chop three oaks for Grubbins&apos; hearth — the
+            rubble in the corner is quest-locked.
           </p>
         </motion.div>
 
-        <div className="mt-14 grid items-stretch gap-6 lg:grid-cols-[3fr_2fr]">
+        <div className="mt-14 grid items-start gap-6 lg:grid-cols-[3fr_2fr]">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -263,7 +305,9 @@ export function LevelEditor() {
                     className="relative grid aspect-square cursor-crosshair place-items-center transition-[filter] duration-75 hover:brightness-150"
                     style={{
                       backgroundColor: tileArt.grass.base,
-                      backgroundImage: `${tileArt[tile].uri}, ${tileArt.grass.uri}`,
+                      backgroundImage: cell.rubble
+                        ? `${rubbleArt.uri}, ${tileArt[tile].uri}`
+                        : `${tileArt[tile].uri}, ${tileArt.grass.uri}`,
                       backgroundSize: "100% 100%",
                       imageRendering: "pixelated",
                       borderTopLeftRadius: !top && !left ? 10 : 0,
@@ -281,6 +325,36 @@ export function LevelEditor() {
                         className="block w-[88%]"
                       >
                         <TreeSprite className="h-auto w-full drop-shadow-[0_2px_4px_rgb(0_0_0/0.5)]" />
+                      </motion.span>
+                    )}
+                    {x === STALL.x && y === STALL.y && (
+                      <span className="absolute inset-0 grid place-items-center">
+                        <StallSprite
+                          open={stop.shopOpen}
+                          className={`h-auto w-[96%] drop-shadow-[0_2px_4px_rgb(0_0_0/0.55)] transition-opacity duration-500 ${
+                            stop.shopOpen ? "opacity-100" : "opacity-75"
+                          }`}
+                        />
+                      </span>
+                    )}
+                    {questDone && x === CHEST.x && y === CHEST.y && (
+                      <motion.span
+                        initial={{ scale: 0, y: -8 }}
+                        animate={{ scale: 1, y: 0 }}
+                        transition={{ type: "spring", damping: 9 }}
+                        className="block w-[82%]"
+                      >
+                        <ChestSprite className="h-auto w-full drop-shadow-[0_2px_4px_rgb(0_0_0/0.5)]" />
+                      </motion.span>
+                    )}
+                    {questDone && x === SHROOM.x && y === SHROOM.y && (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", damping: 9, delay: 0.15 }}
+                        className="block w-[70%]"
+                      >
+                        <ShroomSprite className="h-auto w-full" />
                       </motion.span>
                     )}
                   </div>
@@ -314,16 +388,61 @@ export function LevelEditor() {
                 </motion.p>
               </AnimatePresence>
             </div>
-            <p className="mt-4 font-mono text-xs text-ink-dim">
-              smart tiles · Extend Neighbor on — edges resolve themselves
-            </p>
+            <div className="mt-4 rounded-xl border border-edge bg-void/50 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="flex items-center gap-2 font-display text-sm font-bold">
+                    <Swords className="size-4 text-neon-pink" /> Quest · Firewood
+                    for the hearth
+                  </p>
+                  <p className="mt-1 font-mono text-xs text-ink-dim">
+                    {questDone
+                      ? "turned in — the rubble cleared"
+                      : `chop oaks with the axe · Wood ${Math.min(wood, QUEST_WOOD)}/${QUEST_WOOD}`}
+                  </p>
+                </div>
+                {questDone ? (
+                  <span className="font-mono text-xs font-bold text-neon-green">
+                    ✓ glade unlocked
+                  </span>
+                ) : (
+                  <motion.button
+                    whileHover={wood >= QUEST_WOOD ? { scale: 1.04 } : undefined}
+                    whileTap={wood >= QUEST_WOOD ? { scale: 0.95 } : undefined}
+                    onClick={turnInQuest}
+                    disabled={wood < QUEST_WOOD}
+                    className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
+                      wood >= QUEST_WOOD
+                        ? "border border-blurple/60 bg-blurple/15 text-blurple-bright hover:bg-blurple/30 shadow-[0_0_18px_rgb(108_92_231/0.35)]"
+                        : "cursor-not-allowed border border-edge text-ink-dim/60"
+                    }`}
+                  >
+                    Turn in {QUEST_WOOD} Wood
+                  </motion.button>
+                )}
+              </div>
+              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-panel-2">
+                <motion.div
+                  animate={{
+                    width: `${(Math.min(questDone ? QUEST_WOOD : wood, QUEST_WOOD) / QUEST_WOOD) * 100}%`,
+                  }}
+                  transition={{ type: "spring", stiffness: 160, damping: 22 }}
+                  className={`h-full rounded-full ${questDone ? "bg-neon-green" : "bg-blurple-bright"}`}
+                />
+              </div>
+              <p className="mt-3 text-xs leading-relaxed text-ink-dim">
+                Tiles can be static art or live save data — and it&apos;s all
+                NeoScript-aware. Chopping writes Wood to the save; turning in
+                the quest clears the map.
+              </p>
+            </div>
             <AnimatePresence>
               {lastWrite && (
                 <motion.p
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="absolute bottom-4 right-6 rounded-lg bg-blurple/20 px-3 py-2 font-mono text-xs text-blurple-bright"
+                  className="absolute -top-3 right-6 rounded-lg border border-edge bg-panel px-3 py-2 font-mono text-xs text-blurple-bright shadow-lg"
                 >
                   ✏️ {lastWrite}
                 </motion.p>
@@ -343,19 +462,29 @@ export function LevelEditor() {
               </p>
               <ul className="mt-3 space-y-1.5 font-mono text-xs text-ink-dim">
                 <li className="rounded-md bg-panel-2 px-3 py-1.5">
-                  ▾ Foreground · OakTree ×{treeCount}
+                  ▾ Foreground · OakTree ×{treeCount} / MarketStall
+                  {questDone ? " / Chest" : ""}
                 </li>
                 <li className="rounded-md px-3 py-1.5">
-                  ▾ Background · GrassTile / SoilTile / PondTile / StonePathTile
-                </li>
-                <li className="rounded-md px-3 py-1.5 text-ink-dim/70">
-                  ▸ Collisions · auto from colliders
+                  ▾ Background · Grass / Soil / Pond / StonePath
+                  {questDone ? "" : " / Rubble 🔒"}
                 </li>
               </ul>
             </div>
             <div className="glass rounded-2xl p-5">
-              <p className="flex items-center gap-2 font-display text-sm font-bold text-ink-dim">
-                <CalendarClock className="size-4" /> Routine · Grubbins
+              <p className="flex items-center justify-between font-display text-sm font-bold text-ink-dim">
+                <span className="flex items-center gap-2">
+                  <CalendarClock className="size-4" /> Routine · Grubbins
+                </span>
+                <span
+                  className={`rounded-md px-2 py-0.5 font-mono text-xs font-bold ${
+                    stop.shopOpen
+                      ? "bg-neon-green/15 text-neon-green"
+                      : "bg-panel-2 text-ink-dim"
+                  }`}
+                >
+                  stall {stop.shopOpen ? "OPEN" : "CLOSED"}
+                </span>
               </p>
               <ul className="mt-3 space-y-1.5 font-mono text-xs">
                 {routine.map((entry, index) => (
@@ -379,11 +508,11 @@ export function LevelEditor() {
                 ))}
               </ul>
               <p className="mt-3 text-xs leading-relaxed text-ink-dim">
-                NPC routines are schedules on the clock — and every stop can
-                gate dialogue and quests through NeoScript.
+                Routines run on the clock and gate content through NeoScript —
+                try buying the cursed sword at 20:00 and the trigger fails.
               </p>
             </div>
-            <div className="glass grow rounded-2xl p-5 font-mono text-sm">
+            <div className="glass rounded-2xl p-5 font-mono text-sm">
               <p className="flex items-center justify-between text-xs text-ink-dim">
                 <span>
                   <span className="text-neon-green">●</span> wandering-otter-619.save
@@ -396,17 +525,10 @@ export function LevelEditor() {
                 key={saveJson}
                 initial={{ opacity: 0.4 }}
                 animate={{ opacity: 1 }}
-                className="mt-3 rounded-xl bg-void/70 p-4 text-xs leading-relaxed text-ice"
+                className="mt-3 overflow-x-auto rounded-xl bg-void/70 p-4 text-xs leading-relaxed text-ice"
               >
                 {saveJson}
               </motion.pre>
-              <p className="mt-3 text-xs leading-relaxed text-ink-dim">
-                Tiles and objects can be <span className="text-ink">static</span>{" "}
-                (authored art) or <span className="text-ink">saved</span> (live
-                player state) — the sandbox-game dream. And it&apos;s all
-                NeoScript-aware: chop a tree and Wood lands in the inventory;
-                finish a quest and a new map area unlocks.
-              </p>
             </div>
           </motion.div>
         </div>
