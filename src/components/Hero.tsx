@@ -20,7 +20,7 @@ export function Hero() {
             className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm text-ink-dim"
           >
             <Sparkles className="size-4 text-neon-yellow" />
-            The content platform for story-driven games
+            For any game with narrative content — RPGs to roguelikes
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -38,9 +38,10 @@ export function Hero() {
             className="mt-6 text-lg leading-relaxed text-ink-dim"
           >
             Neo Compose turns your game&apos;s data — schemas, branching
-            dialogue, saves, and translations — into one living project that
-            ships straight into Unity as typed C#. Author it on the web, sync
-            it in realtime, version it like code.
+            dialogue, saves, levels, and translations — into one living
+            project that ships straight into Unity as typed C#. Cozy farming
+            sim or sprawling ARPG: author it on the web, sync it in realtime,
+            version it like code.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 24 }}

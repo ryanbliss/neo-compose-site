@@ -7,6 +7,7 @@ import {
   CloudUpload,
   GitBranch,
   Languages,
+  Map,
   MessageSquareMore,
   SquareTerminal,
   Wand2,
@@ -71,6 +72,13 @@ const features: Feature[] = [
     title: "Schema as code",
     body: "The neo CLI mirrors your project as compilable C#: pull, push, diff, branch, merge. Perfect for code review — and for your coding agents.",
     accent: "text-neon-green",
+  },
+  {
+    icon: Map,
+    title: "A level editor, Figma-style",
+    body: "Coming soon: pages, layers, smart tiles, and object palettes — where any tile can be static art or live save data, all wired to NeoScript and your dialogue flows.",
+    accent: "text-ice",
+    className: "md:col-span-2",
   },
 ];
 

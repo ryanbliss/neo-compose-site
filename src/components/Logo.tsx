@@ -1,6 +1,12 @@
 import Image from "next/image";
 
-export function Logo({ size = 36 }: { size?: number }) {
+export function Logo({
+  size = 36,
+  priority = false,
+}: {
+  size?: number;
+  priority?: boolean;
+}) {
   return (
     <span
       className="relative grid place-items-center rounded-xl bg-panel-2 p-1.5"
@@ -11,6 +17,7 @@ export function Logo({ size = 36 }: { size?: number }) {
         alt="Neo Compose — n, e, o, c controller buttons"
         width={size}
         height={size}
+        priority={priority}
         className="drop-shadow-[0_0_10px_rgb(108_92_231/0.45)]"
       />
     </span>

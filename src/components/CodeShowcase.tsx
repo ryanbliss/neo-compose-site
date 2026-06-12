@@ -232,7 +232,15 @@ export function CodeShowcase() {
               className="min-h-[24rem] overflow-x-auto p-6 font-mono text-sm leading-7"
             >
               {active.lines.map((line, lineIndex) => (
-                <div key={lineIndex}>
+                <motion.div
+                  key={`${activeId}-${lineIndex}`}
+                  initial={{ opacity: 0, y: activeId === "cli" ? 4 : 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: activeId === "cli" ? lineIndex * 0.22 : 0,
+                    duration: 0.18,
+                  }}
+                >
                   {line.length === 0
                     ? " "
                     : line.map((token, tokenIndex) => (
@@ -240,7 +248,7 @@ export function CodeShowcase() {
                           {token.text}
                         </span>
                       ))}
-                </div>
+                </motion.div>
               ))}
             </motion.pre>
           </AnimatePresence>

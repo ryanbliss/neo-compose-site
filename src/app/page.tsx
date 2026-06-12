@@ -3,6 +3,7 @@ import { DialogueDemo } from "@/components/DialogueDemo";
 import { FeatureBento } from "@/components/FeatureBento";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
+import { LevelEditor } from "@/components/LevelEditor";
 import { LiveSync } from "@/components/LiveSync";
 import { Marquee } from "@/components/Marquee";
 import { Nav } from "@/components/Nav";
@@ -21,6 +22,7 @@ export default function Home() {
       <CodeShowcase />
       <SchemaSync />
       <LiveSync />
+      <LevelEditor />
       <WikiDemo />
       <Security />
       <Footer />

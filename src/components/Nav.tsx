@@ -8,6 +8,7 @@ const links = [
   { href: "#play", label: "Try a dialogue" },
   { href: "#code", label: "Code" },
   { href: "#agents", label: "Agents" },
+  { href: "#editor", label: "Level editor" },
   { href: "#security", label: "Security" },
 ];
 
@@ -21,7 +22,7 @@ export function Nav() {
     >
       <nav className="glass mx-auto mt-4 flex w-[min(72rem,calc(100%-2rem))] items-center justify-between rounded-2xl px-5 py-3">
         <a href="#top" className="flex items-center gap-2.5">
-          <Logo size={30} />
+          <Logo size={30} priority />
           <span className="font-display text-lg font-bold tracking-tight">
             neo<span className="text-blurple-bright">compose</span>
           </span>

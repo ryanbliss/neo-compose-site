@@ -16,12 +16,13 @@ export function Footer() {
           className="glass glow-ring rounded-3xl px-8 py-16 text-center"
         >
           <h2 className="font-display mx-auto max-w-3xl text-4xl font-bold tracking-tight md:text-5xl">
-            Your game&apos;s story deserves better than a
+            Your game&apos;s content deserves better than a
             <span className="text-gradient"> spreadsheet</span>.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-ink-dim">
-            Schema, dialogue, saves, locales, releases — one project, typed
-            end to end, synced to Unity in realtime.
+            Schema, dialogue, saves, levels, locales, releases — one project,
+            typed end to end, synced to Unity in realtime. Whatever genre
+            you&apos;re shipping.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a
@@ -43,7 +44,7 @@ export function Footer() {
             <span className="font-display font-bold text-ink">
               neo<span className="text-blurple-bright">compose</span>
             </span>
-            · built for story-driven games
+            · narrative tooling for every genre
           </p>
           <p>© {new Date().getFullYear()} Studio Bliss</p>
         </div>

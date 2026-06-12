@@ -6,29 +6,34 @@ import {
   Eye,
   KeyRound,
   Lock,
-  Rocket,
   Save,
   ShieldCheck,
   UserCheck,
 } from "lucide-react";
 
-type RoleId = "owner" | "developer" | "translator" | "playtester";
+type RoleId = "owner" | "developer" | "translator" | "playtester" | "player";
+
+type ChannelId = "development" | "staging" | "production";
 
 interface Role {
   id: RoleId;
   label: string;
   emoji: string;
   blurb: string;
+  extras: string[];
   channels: Record<ChannelId, { read: boolean; publish: boolean }>;
   saves: string;
 }
 
-type ChannelId = "development" | "staging" | "production";
-
-const channels: Array<{ id: ChannelId; label: string; icon: typeof Rocket; note: string }> = [
+const channels: Array<{
+  id: ChannelId;
+  label: string;
+  icon: typeof Eye;
+  note: string;
+}> = [
   { id: "development", label: "Development", icon: Eye, note: "open to the team" },
   { id: "staging", label: "Staging / Beta", icon: UserCheck, note: "invited playtesters" },
-  { id: "production", label: "Production", icon: Lock, note: "locked by default" },
+  { id: "production", label: "Production", icon: Lock, note: "the public, once you ship" },
 ];
 
 const roles: Role[] = [
@@ -38,6 +43,7 @@ const roles: Role[] = [
     emoji: "👑",
     blurb:
       "Org owners hold an immutable safety-net policy — no misconfigured rule can ever lock them out of their own project.",
+    extras: ["manages policies & channels", "full wiki access"],
     channels: {
       development: { read: true, publish: true },
       staging: { read: true, publish: true },
@@ -51,12 +57,14 @@ const roles: Role[] = [
     emoji: "🛠",
     blurb:
       "Developers edit schema, values, and dialogues, and ship to internal channels — production stays out of reach unless granted.",
+    extras: ["edits schema & dialogues", "reads the team wiki"],
     channels: {
       development: { read: true, publish: true },
       staging: { read: true, publish: true },
       production: { read: true, publish: false },
     },
-    saves: "Opens a beta tester's shared save in the web editor, fixes the corrupt value, ships the patch.",
+    saves:
+      "Opens a beta tester's shared save in the web editor, fixes the corrupt value, ships the patch.",
   },
   {
     id: "translator",
@@ -64,6 +72,7 @@ const roles: Role[] = [
     emoji: "🌍",
     blurb:
       "Translators edit localized strings — and only localized strings. Status policies even control who can mark a string Approved.",
+    extras: ["locale values only", "status approvals gated"],
     channels: {
       development: { read: true, publish: false },
       staging: { read: true, publish: false },
@@ -77,12 +86,33 @@ const roles: Role[] = [
     emoji: "🎮",
     blurb:
       "Invited by email, signs in from the shipped game via per-project OAuth. Sees exactly one channel — the beta they were invited to.",
+    extras: ["beta channel only", "owns & shares their saves"],
     channels: {
       development: { read: false, publish: false },
       staging: { read: true, publish: false },
       production: { read: false, publish: false },
     },
-    saves: "Owns their save files by default — and chooses to share one with the devs when something breaks.",
+    saves:
+      "Owns their save files by default — and chooses to share one with the devs when something breaks.",
+  },
+  {
+    id: "player",
+    label: "Player",
+    emoji: "🕹",
+    blurb:
+      "The public, after launch. Production reads can be opened wide — anonymous or signed-in — while the org-only channels stay invisible.",
+    extras: [
+      "reads public wiki pages",
+      "cross-platform cloud saves",
+      "anonymous or signed-in",
+    ],
+    channels: {
+      development: { read: false, publish: false },
+      staging: { read: false, publish: false },
+      production: { read: true, publish: false },
+    },
+    saves:
+      "Owns their cloud saves outright — synced across platforms, shared only when they say so. The mod marketplace plugs in here next.",
   },
 ];
 
@@ -108,7 +138,8 @@ export function Security() {
           </h2>
           <p className="mt-4 text-lg text-ink-dim">
             Policy-based roles, per-channel access, and per-project OAuth with
-            narrow scopes. Pick a role and see what it can touch.
+            narrow scopes. Pick a role — from org owner to anonymous player —
+            and see what it can touch.
           </p>
         </motion.div>
 
@@ -129,16 +160,26 @@ export function Security() {
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.p
+          <motion.div
             key={roleId}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="mx-auto mt-6 max-w-2xl text-center text-ink-dim"
+            className="mx-auto mt-6 max-w-2xl text-center"
           >
-            {role.blurb}
-          </motion.p>
+            <p className="text-ink-dim">{role.blurb}</p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {role.extras.map((extra) => (
+                <span
+                  key={extra}
+                  className="rounded-full border border-edge bg-panel-2 px-3 py-1 text-xs text-ink-dim"
+                >
+                  {extra}
+                </span>
+              ))}
+            </div>
+          </motion.div>
         </AnimatePresence>
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -160,9 +201,14 @@ export function Security() {
                     <channel.icon className="size-4 text-blurple-bright" />
                     {channel.label}
                   </span>
-                  {channel.id === "production" && (
-                    <Lock className="size-4 text-neon-yellow" />
-                  )}
+                  {channel.id === "production" &&
+                    (roleId === "player" ? (
+                      <span className="text-xs font-bold text-neon-green">
+                        PUBLIC
+                      </span>
+                    ) : (
+                      <Lock className="size-4 text-neon-yellow" />
+                    ))}
                 </p>
                 <p className="mt-1 text-xs text-ink-dim">{channel.note}</p>
                 <div className="mt-5 flex gap-2">
@@ -198,7 +244,7 @@ export function Security() {
             className="glass rounded-2xl p-6"
           >
             <p className="flex items-center gap-2 font-display font-bold">
-              <Save className="size-4 text-ice" /> Playtester saves, debugged in place
+              <Save className="size-4 text-ice" /> Player saves, debugged in place
             </p>
             <AnimatePresence mode="wait">
               <motion.p
@@ -231,7 +277,7 @@ export function Security() {
               <li>· Per-project OAuth clients with player-consented scopes</li>
               <li>· Device-code sign-in from Unity and shipped games</li>
               <li>· Secure channels can require OAuth on top of API keys</li>
-              <li>· Every policy editable — down to invited-email playtests</li>
+              <li>· Every policy editable — from invited-email betas to fully public production</li>
             </ul>
           </motion.div>
         </div>
