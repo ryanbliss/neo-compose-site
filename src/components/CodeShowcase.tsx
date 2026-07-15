@@ -27,7 +27,7 @@ const csharpLines: Line[] = [
     { text: " : ", color: plain },
     { text: "Weapon", color: type },
     { text: "   ", color: plain },
-    { text: "// your abstract types, real inheritance", color: comment },
+    { text: "// your abstract classes, real inheritance", color: comment },
   ],
   [
     { text: "{", color: plain },
@@ -79,7 +79,7 @@ const cliLines: Line[] = [
     { text: "$ ", color: comment },
     { text: "neo pull", color: plain },
   ],
-  [{ text: "  ✓ schema synced → neo/Schema/*.cs", color: ok }],
+  [{ text: "  ✓ schema synced → neo/Classes/*.cs", color: ok }],
   [],
   [
     { text: "$ ", color: comment },
@@ -174,7 +174,7 @@ export function CodeShowcase() {
           </p>
           <ul className="mt-6 space-y-3 text-ink-dim">
             {[
-              "Inheritance and abstract custom types generate real C# class hierarchies",
+              "Inheritance and abstract classes generate real C# class hierarchies",
               "Bind NeoScript functions to your own native C# methods",
               "Typed change subscriptions — no string keys, no reflection in your hot path",
               "Autocomplete across your entire data model; if it compiles, it matches the project",
