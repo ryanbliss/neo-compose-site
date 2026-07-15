@@ -271,7 +271,7 @@
         <div id="agTermBody"></div>
       </div>
       <div class="glass" id="agCode">
-        <span class="ptitle mono" style="font-size:23px;">neo/Schema/Save.cs</span><span id="agSync">IN SYNC</span>
+        <span class="ptitle mono" style="font-size:23px;">neo/Classes/Save.cs</span><span id="agSync">IN SYNC</span>
         <div id="agCodeBody"></div>
       </div>
     </div>
@@ -480,7 +480,7 @@ const AG_PROMPT = 'claude "give Grubbins a rat-king quest"';
 $("agCodeBody").innerHTML =
 `<span style="color:${K}">namespace</span> <span style="color:${TY}">RustyGoblInn.Schema</span>;
 
-<span style="color:${CM}">[NeoCustomType]</span>
+<span style="color:${CM}">[NeoSchemaClass]</span>
 <span style="color:${K}">public partial class</span> <span style="color:${TY}">Save</span>
 {
     <span style="color:${K}">public int</span> Gold = <span style="color:#ffd166">80</span>;
@@ -672,7 +672,7 @@ window.seek = function seek(t) {
     const lines = [];
     const promptChars = Math.floor(seg(t, s + 0.7, s + 1.9) * AG_PROMPT.length);
     if (promptChars > 0) lines.push(`<span class="g">$</span> ${esc(AG_PROMPT.slice(0, promptChars))}${promptChars < AG_PROMPT.length ? '<span class="cursor">▌</span>' : ""}`);
-    if (t > s + 2.2) lines.push(`<span class="b">⚙ agent</span> editing neo/Schema/Save.cs…`);
+    if (t > s + 2.2) lines.push(`<span class="b">⚙ agent</span> editing neo/Classes/Save.cs…`);
     if (t > s + 3.6) lines.push(`<span class="g">$</span> neo push`);
     if (t > s + 4.4) lines.push(`<span class="g">✓ 1 record committed (minor bump)</span>`);
     $("agTermBody").innerHTML = lines.join("<br/>");

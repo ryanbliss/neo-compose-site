@@ -33,7 +33,7 @@ const features: Feature[] = [
   {
     icon: Boxes,
     title: "Visual schema builder",
-    body: "Design assets, saves, and session data with custom types, enums, lists, and computed getters — no spreadsheets, no hand-rolled JSON.",
+    body: "Design assets, saves, and session data with classes, enums, lists, and computed getters — no spreadsheets, no hand-rolled JSON.",
     accent: "text-neon-pink",
   },
   {

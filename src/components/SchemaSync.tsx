@@ -68,7 +68,7 @@ const terminalLines: TerminalLine[] = [
   { prefix: "$", text: "neo dev" },
   { text: "⟳ watching… changes sync both ways", className: "text-neon-green" },
   { prefix: "$", text: 'claude "add a quest chain for the rat king"' },
-  { text: "agent edits neo/Schema/Save.cs → neo push", suffix: "✓" },
+  { text: "agent edits neo/Classes/Save.cs → neo push", suffix: "✓" },
 ];
 
 type FieldType = "int" | "float" | "string";
@@ -129,7 +129,7 @@ export function SchemaSync() {
             </p>
             <div className="mt-6 space-y-5">
               <label className="block">
-                <span className="text-sm text-ink-dim">Attribute name</span>
+                <span className="text-sm text-ink-dim">Member name</span>
                 <input
                   value={fieldName}
                   onChange={(event) => setFieldName(event.target.value)}
@@ -174,7 +174,7 @@ export function SchemaSync() {
           >
             <p className="flex items-center justify-between font-display font-bold text-ink-dim">
               <span className="flex items-center gap-2">
-                <RefreshCw className="size-4" /> neo/Schema/Save.cs
+                <RefreshCw className="size-4" /> neo/Classes/Save.cs
               </span>
               <span className="rounded-md bg-neon-green/15 px-2 py-0.5 text-xs font-bold text-neon-green">
                 IN SYNC
@@ -187,7 +187,7 @@ export function SchemaSync() {
               </div>
               <div> </div>
               <div>
-                <span className="text-ink-dim">[NeoCustomType]</span>
+                <span className="text-ink-dim">[NeoSchemaClass]</span>
               </div>
               <div>
                 <span className="text-neon-pink">public partial class</span>{" "}
